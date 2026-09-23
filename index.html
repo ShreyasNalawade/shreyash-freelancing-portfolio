@@ -472,6 +472,28 @@
             transition: transform 0.35s ease !important;
         }
 
+        /* Horizontal project track: one composited layer, no hover work mid-scroll */
+        #projects-wrapper {
+            isolation: isolate;
+        }
+
+        #projects-container {
+            backface-visibility: hidden;
+        }
+
+        #projects-container.is-active {
+            will-change: transform;
+        }
+
+        body.is-scrolling #projects-container {
+            pointer-events: none;
+        }
+
+        body.is-scrolling #projects-container .animate-ping,
+        body.is-scrolling #projects-container .animate-pulse {
+            animation-play-state: paused;
+        }
+
         /* Full-viewport blur while the modal is closed still costs a paint */
         #project-modal {
             -webkit-backdrop-filter: none !important;
@@ -1819,9 +1841,15 @@
             let scrollIdleTimer = 0;
             lenis.on('scroll', () => {
                 ScrollTrigger.update();
-                pageScrolling = true;
+                if (!pageScrolling) {
+                    pageScrolling = true;
+                    document.body.classList.add('is-scrolling');
+                }
                 clearTimeout(scrollIdleTimer);
-                scrollIdleTimer = setTimeout(() => { pageScrolling = false; }, 120);
+                scrollIdleTimer = setTimeout(() => {
+                    pageScrolling = false;
+                    document.body.classList.remove('is-scrolling');
+                }, 140);
             });
             gsap.ticker.add((time) => { lenis.raf(time * 1000); });
             gsap.ticker.lagSmoothing(0);
@@ -1896,15 +1924,20 @@
             // Magnetic Buttons & Hover Effects
             const magnetics = document.querySelectorAll('.magnetic');
             magnetics.forEach(btn => {
-                btn.addEventListener('mousemove', (e) => {
-                    const rect = btn.getBoundingClientRect();
-                    const h = rect.width / 2;
-                    const v = rect.height / 2;
-                    const x = e.clientX - rect.left - h;
-                    const y = e.clientY - rect.top - v;
+                const isProjectCard = btn.classList.contains('project-card');
 
-                    gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.4, ease: "power2.out" });
-                });
+                if (!isProjectCard) {
+                    btn.addEventListener('mousemove', (e) => {
+                        if (pageScrolling) return;
+                        const rect = btn.getBoundingClientRect();
+                        const h = rect.width / 2;
+                        const v = rect.height / 2;
+                        const x = e.clientX - rect.left - h;
+                        const y = e.clientY - rect.top - v;
+
+                        gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.4, ease: "power2.out" });
+                    });
+                }
 
                 btn.addEventListener('mouseenter', () => {
                     cursorOutline.classList.add('hover');
@@ -1915,7 +1948,9 @@
                 });
 
                 btn.addEventListener('mouseleave', () => {
-                    gsap.to(btn, { x: 0, y: 0, duration: 0.4, ease: "elastic.out(1, 0.3)" });
+                    if (!isProjectCard) {
+                        gsap.to(btn, { x: 0, y: 0, duration: 0.4, ease: "elastic.out(1, 0.3)" });
+                    }
                     cursorOutline.classList.remove('hover');
                     cursorText.innerText = '';
                     cursorDot.style.opacity = '1';
@@ -2203,15 +2238,18 @@
                     gsap.to(projectsContainer, {
                         x: () => -getScrollAmount(),
                         ease: "none",
+                        force3D: true,
                         scrollTrigger: {
                             trigger: "#projects-wrapper",
                             start: "top top",
                             pin: true,
-                            scrub: 0.35,
+                            scrub: true,
                             anticipatePin: 1,
-                            fastScrollEnd: true,
                             invalidateOnRefresh: true,
-                            end: () => "+=" + getScrollAmount()
+                            end: () => "+=" + getScrollAmount(),
+                            onToggle: (self) => {
+                                projectsContainer.classList.toggle('is-active', self.isActive);
+                            }
                         }
                     });
 
