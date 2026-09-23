@@ -1,0 +1,2441 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Software Systems | Full Stack Architect</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700;800;900&family=Syncopate:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#050505',
+                            dark: '#0a0a0a',
+                            surface: '#111111',
+                            purple: '#8b5cf6',
+                            purpleGlow: 'rgba(139, 92, 246, 0.5)',
+                            cyan: '#06b6d4'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        tech: ['Syncopate', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Base & Resets */
+        :root {
+            --cursor-size: 20px;
+            --purple-glow: 0 0 30px rgba(139, 92, 246, 0.4);
+            --cyan-glow: 0 0 30px rgba(6, 182, 212, 0.4);
+        }
+
+        body {
+            background-color: #050505;
+            color: #ffffff;
+            overflow-x: hidden;
+            cursor: none;
+            /* Hide default cursor */
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Cinematic Grain Overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Custom Cursor */
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .cursor-dot {
+            width: 5px;
+            height: 5px;
+            background-color: #8b5cf6;
+        }
+
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cursor-outline.hover {
+            width: 80px;
+            height: 80px;
+            background-color: rgba(139, 92, 246, 0.1);
+            border-color: #8b5cf6;
+            backdrop-filter: blur(2px);
+        }
+
+        /* Utilities */
+        .glass-panel {
+            background: rgba(17, 17, 17, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .glass-panel-hover {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .glass-panel-hover:hover {
+            border-color: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 10px 40px rgba(139, 92, 246, 0.15);
+            transform: translateY(-5px);
+        }
+
+        .text-glow {
+            text-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
+        }
+
+        .bg-glow-purple {
+            box-shadow: 0 0 50px rgba(139, 92, 246, 0.2);
+        }
+
+        /* Text Split Animation Preparation */
+        .split-line {
+            overflow: hidden;
+        }
+
+        /* Lenis Smooth Scroll */
+        html.lenis {
+            height: auto;
+        }
+
+        .lenis.lenis-smooth {
+            scroll-behavior: auto;
+        }
+
+        .lenis.lenis-smooth [data-lenis-prevent] {
+            overscroll-behavior: contain;
+        }
+
+        .lenis.lenis-stopped {
+            overflow: hidden;
+        }
+
+        .lenis.lenis-scrolling iframe {
+            pointer-events: none;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1f1f1f;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8b5cf6;
+        }
+
+        /* Dynamic Lighting Follower */
+        .mouse-light {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.07) 0%, rgba(0, 0, 0, 0) 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Orbital Skills Animation */
+        .orbit-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin: auto;
+        }
+
+        .orbit-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .orbit-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 1px dashed rgba(139, 92, 246, 0.2);
+            animation: spin 30s linear infinite;
+        }
+
+        .orbit-ring-2 {
+            width: 300px;
+            height: 300px;
+            animation-duration: 40s;
+            animation-direction: reverse;
+        }
+
+        .orbit-ring-3 {
+            width: 450px;
+            height: 450px;
+            animation-duration: 50s;
+        }
+
+        .orbit-item {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #111;
+            padding: 10px;
+            border-radius: 50%;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Anti-spin so items stay upright */
+        .orbit-item>i {
+            animation: spin 30s linear infinite reverse;
+        }
+
+        .orbit-ring-2 .orbit-item>i {
+            animation-duration: 40s;
+            animation-direction: normal;
+        }
+
+        .orbit-ring-3 .orbit-item>i {
+            animation-duration: 50s;
+            animation-direction: reverse;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        @keyframes spinReverse {
+            100% {
+                transform: translate(-50%, -50%) rotate(-360deg);
+            }
+        }
+
+        /* Abstract UI Lines for Mockups */
+        .ui-line {
+            height: 4px;
+            border-radius: 2px;
+            background: linear-gradient(90deg, #8b5cf6 0%, transparent 100%);
+            animation: pulse-width 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse-width {
+            0% {
+                width: 20%;
+                opacity: 0.3;
+            }
+
+            100% {
+                width: 80%;
+                opacity: 1;
+            }
+        }
+
+        /* Abstract dashboard grid */
+        .dash-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .dash-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            height: 40px;
+        }
+
+        /* Hide elements before GSAP loads */
+        .gsap-reveal {
+            visibility: hidden;
+        }
+
+        /* ============================================
+           RESPONSIVE ENHANCEMENTS
+           ============================================ */
+
+        /* Guard against any accidental horizontal overflow */
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Projects horizontal scroll track */
+        #projects-container {
+            will-change: transform;
+        }
+
+        /* Touch / no-hover devices: restore native cursor & hide custom cursor visuals */
+        @media (hover: none),
+        (pointer: coarse) {
+            body {
+                cursor: auto;
+            }
+
+            .cursor-dot,
+            .cursor-outline,
+            .mouse-light {
+                display: none !important;
+            }
+
+            .magnetic {
+                transform: none !important;
+            }
+        }
+
+        /* Orbit visualization scales down on smaller screens so it never overflows */
+        @media (max-width: 1024px) {
+            .orbit-container {
+                transform: scale(0.85);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .orbit-container {
+                transform: scale(0.6);
+            }
+        }
+
+        @media (max-width: 380px) {
+            .orbit-container {
+                transform: scale(0.5);
+            }
+        }
+
+        /* Mobile navigation menu */
+        #mobile-menu {
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+
+        #mobile-menu.open {
+            max-height: 420px;
+            opacity: 1;
+        }
+
+        /* Smaller tweaks for very small phones */
+        @media (max-width: 400px) {
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+        }
+
+        /* About section floating elements */
+        @keyframes floaty {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        .about-float {
+            animation: floaty 4s ease-in-out infinite;
+        }
+
+        .about-float-2 {
+            animation: floaty 5.5s ease-in-out infinite;
+            animation-delay: 0.8s;
+        }
+
+        @keyframes rotate360 {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .about-ring {
+            animation: rotate360 26s linear infinite;
+        }
+
+        .about-img {
+            animation: floaty 6s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="antialiased selection:bg-brand-purple selection:text-white">
+
+    <!-- Preloader -->
+    <div id="preloader" class="fixed inset-0 z-[9999] bg-brand-black flex flex-col items-center justify-center">
+        <div class="relative w-full max-w-md px-8 text-center">
+            <div class="mb-8 relative inline-block">
+                <i class="fas fa-cube text-5xl text-brand-purple animate-pulse"></i>
+                <div class="absolute inset-0 blur-xl bg-brand-purple opacity-50 rounded-full"></div>
+            </div>
+            <div class="text-6xl md:text-8xl font-black font-tech text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-cyan-500 mb-6"
+                id="loader-text">00</div>
+            <div class="w-full h-[2px] bg-gray-900 rounded-full overflow-hidden relative">
+                <div id="loader-bar"
+                    class="absolute top-0 left-0 h-full bg-gradient-to-r from-brand-purple to-brand-cyan w-0 shadow-[0_0_15px_#8b5cf6]">
+                </div>
+            </div>
+            <div class="mt-6 flex justify-between text-[10px] uppercase tracking-[0.4em] text-gray-500 font-tech">
+                <span>System Initialization</span>
+                <span class="animate-pulse">Loading Assets...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cinematic Overlays -->
+    <div class="noise-overlay"></div>
+    <div class="mouse-light" id="mouse-light"></div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"><span id="cursor-text"></span></div>
+
+    <!-- Background Three.js Canvas -->
+    <canvas id="bg-canvas" class="fixed inset-0 z-[-1] pointer-events-none"></canvas>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full top-0 z-50 glass-panel border-b-0 py-4 transition-all duration-300" id="navbar">
+        <div class="container mx-auto px-6 lg:px-12 flex justify-between items-center">
+            <a href="#" class="text-xl sm:text-2xl font-tech font-bold tracking-tighter flex items-center gap-2 magnetic"
+                data-cursor="VIEW">
+                <i class="fas fa-layer-group text-brand-purple"></i>
+                <span>SSn <span class="text-brand-purple">Go</span></span>
+            </a>
+            <div class="hidden md:flex gap-6 items-center text-sm font-semibold tracking-wider uppercase">
+                <a href="#about" class="hover:text-brand-purple transition-colors magnetic"
+                    data-cursor="GO">About</a>
+                <a href="#services" class="hover:text-brand-purple transition-colors magnetic"
+                    data-cursor="GO">Services</a>
+                <a href="#work" class="hover:text-brand-purple transition-colors magnetic" data-cursor="GO">Systems</a>
+                <a href="#frontend-work" class="hover:text-brand-purple transition-colors magnetic"
+                    data-cursor="GO">Interfaces</a>
+                <a href="#process" class="hover:text-brand-purple transition-colors magnetic"
+                    data-cursor="GO">Architecture</a>
+                <a href="#contact"
+                    class="px-6 py-2 bg-white/5 border border-white/10 rounded-full hover:bg-brand-purple hover:border-brand-purple transition-all magnetic"
+                    data-cursor="START">Initialize</a>
+            </div>
+            <!-- Mobile Hamburger -->
+            <button id="mobile-menu-btn"
+                class="md:hidden w-10 h-10 flex items-center justify-center text-xl rounded-lg bg-white/5 border border-white/10 hover:bg-brand-purple/20 transition-colors"
+                aria-label="Toggle menu" aria-expanded="false">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="md:hidden">
+            <div class="container mx-auto px-6 pt-4 pb-2 flex flex-col gap-1 text-sm font-semibold tracking-wider uppercase">
+                <a href="#about" class="mobile-link py-3 border-b border-white/5 hover:text-brand-purple transition-colors">About</a>
+                <a href="#services" class="mobile-link py-3 border-b border-white/5 hover:text-brand-purple transition-colors">Services</a>
+                <a href="#work" class="mobile-link py-3 border-b border-white/5 hover:text-brand-purple transition-colors">Systems</a>
+                <a href="#frontend-work" class="mobile-link py-3 border-b border-white/5 hover:text-brand-purple transition-colors">Interfaces</a>
+                <a href="#process" class="mobile-link py-3 border-b border-white/5 hover:text-brand-purple transition-colors">Architecture</a>
+                <a href="#contact"
+                    class="mobile-link mt-3 mb-2 px-6 py-3 text-center bg-brand-purple rounded-full hover:bg-brand-purple/80 transition-all">Initialize</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main id="smooth-wrapper">
+        <div id="smooth-content">
+
+            <!-- Hero Section -->
+            <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden" id="hero">
+
+                <!-- Floating Holographic UI Elements -->
+                <div class="absolute inset-0 z-0 pointer-events-none">
+                    <!-- Top Left UI -->
+                    <div class="absolute top-1/4 left-[5%] w-64 glass-panel p-4 rounded-lg transform -rotate-6 float-anim opacity-50 hidden lg:block tilt-card"
+                        data-tilt data-tilt-max="15">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-[10px] text-brand-purple font-tech">SYS.MONITOR</span>
+                            <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="h-1 bg-white/10 rounded w-full">
+                                <div class="h-full bg-brand-purple w-3/4 rounded shadow-[0_0_10px_#8b5cf6]"></div>
+                            </div>
+                            <div class="h-1 bg-white/10 rounded w-full">
+                                <div class="h-full bg-brand-cyan w-1/2 rounded shadow-[0_0_10px_#06b6d4]"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Bottom Right UI -->
+                    <div class="absolute bottom-1/4 right-[5%] w-72 glass-panel p-4 rounded-lg transform rotate-3 float-anim-delayed opacity-50 hidden lg:block tilt-card"
+                        data-tilt data-tilt-max="15">
+                        <div class="text-[10px] text-brand-cyan font-tech mb-3 border-b border-white/10 pb-2">
+                            DATA.STREAM // 0x48FA</div>
+                        <div class="dash-grid">
+                            <div class="dash-box flex items-center justify-center"><i
+                                    class="fas fa-server text-white/30 text-xs"></i></div>
+                            <div class="dash-box flex items-center justify-center"><i
+                                    class="fas fa-database text-white/30 text-xs"></i></div>
+                            <div class="dash-box flex items-center justify-center"><i
+                                    class="fas fa-network-wired text-brand-purple/50 text-xs shadow-[0_0_10px_#8b5cf6]"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container mx-auto px-6 relative z-10 text-center flex flex-col items-center">
+                    <div
+                        class="inline-block mb-6 px-4 py-1 rounded-full border border-brand-purple/30 bg-brand-purple/5 backdrop-blur-md gsap-reveal hero-stagger">
+                        <span class="text-xs font-tech tracking-widest text-brand-purple uppercase"><i
+                                class="fas fa-circle text-[8px] mr-2 animate-pulse"></i>Enterprise Grade
+                            Solutions</span>
+                    </div>
+
+                    <h1
+                        class="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black font-display tracking-tight leading-[1.1] mb-6 w-full max-w-6xl gsap-reveal hero-stagger">
+                        ARCHITECTING <br />
+                        <span
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple via-indigo-400 to-brand-cyan text-glow">HIGH-END
+                            DIGITAL</span><br />
+                        ECOSYSTEMS
+                    </h1>
+
+                    <p
+                        class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto font-light mb-10 gsap-reveal hero-stagger">
+                        World-class Full Stack Developer engineering scalable CRMs, SaaS platforms, and intelligent
+                        business automation systems for premium brands.
+                    </p>
+
+                    <div
+                        class="flex flex-col sm:flex-row gap-6 justify-center items-center gsap-reveal hero-stagger w-full">
+                        <a href="#contact"
+                            class="group relative px-8 py-4 bg-brand-purple rounded-full text-white font-bold tracking-wider overflow-hidden w-full sm:w-auto magnetic"
+                            data-cursor="START">
+                            <div
+                                class="absolute inset-0 bg-white/20 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out">
+                            </div>
+                            <span class="relative z-10 flex items-center justify-center gap-3">
+                                INITIATE PROJECT <i
+                                    class="fas fa-arrow-right -rotate-45 group-hover:rotate-0 transition-transform"></i>
+                            </span>
+                        </a>
+                        <a href="#work"
+                            class="px-8 py-4 bg-transparent border border-white/20 hover:border-white/50 rounded-full text-white font-bold tracking-wider transition-all w-full sm:w-auto magnetic"
+                            data-cursor="EXPLORE">
+                            VIEW SYSTEMS
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Scroll Indicator -->
+                <div
+                    class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center opacity-50">
+                    <span
+                        class="text-[10px] font-tech tracking-widest mb-2 writing-vertical-rl transform rotate-180">SCROLL</span>
+                    <div class="w-[1px] h-12 bg-white/20 relative overflow-hidden">
+                        <div
+                            class="w-full h-1/2 bg-white absolute top-0 left-0 animate-[scrollDown_1.5s_ease-in-out_infinite]">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Company Stats / Marquee -->
+            <section class="py-10 border-y border-white/5 bg-black/50 backdrop-blur-sm relative z-10">
+                <div class="container mx-auto px-6">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-white/5 text-center">
+                        <div class="gsap-reveal stat-item p-4">
+                            <div class="text-4xl md:text-5xl font-black font-display text-brand-purple mb-2">50+</div>
+                            <div class="text-xs text-gray-500 font-tech tracking-widest uppercase">Systems Deployed
+                            </div>
+                        </div>
+                        <div class="gsap-reveal stat-item p-4">
+                            <div class="text-4xl md:text-5xl font-black font-display text-white mb-2">99%</div>
+                            <div class="text-xs text-gray-500 font-tech tracking-widest uppercase">Performance Score
+                            </div>
+                        </div>
+                        <div class="gsap-reveal stat-item p-4">
+                            <div class="text-4xl md:text-5xl font-black font-display text-brand-cyan mb-2">2M+</div>
+                            <div class="text-xs text-gray-500 font-tech tracking-widest uppercase">Lines of Code</div>
+                        </div>
+                        <div class="gsap-reveal stat-item p-4">
+                            <div class="text-4xl md:text-5xl font-black font-display text-white mb-2">100%</div>
+                            <div class="text-xs text-gray-500 font-tech tracking-widest uppercase">Client ROI</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About Me Section -->
+            <section id="about" class="py-20 md:py-32 relative z-10 overflow-hidden">
+                <!-- Ambient glow -->
+                <div
+                    class="absolute top-1/2 left-1/3 w-[500px] h-[500px] bg-brand-purple rounded-full mix-blend-screen filter blur-[160px] opacity-10 pointer-events-none -translate-y-1/2">
+                </div>
+
+                <div class="container mx-auto px-6 lg:px-12 relative z-10">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+
+                        <!-- LEFT: Information -->
+                        <div class="order-2 lg:order-1">
+                            <h2
+                                class="text-xs sm:text-sm font-tech text-brand-purple tracking-widest uppercase mb-4 gsap-reveal">
+                                <i class="fas fa-user-astronaut mr-2"></i> Who I Am
+                            </h2>
+                            <h3
+                                class="text-3xl sm:text-4xl md:text-5xl font-black font-display leading-tight mb-6 gsap-reveal">
+                                HI, I'M <span
+                                    class="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple to-brand-cyan">SHREYAS
+                                    NALAWADE</span>
+                            </h3>
+                            <p class="text-gray-400 font-light leading-relaxed mb-4 gsap-reveal">
+                                A <strong class="text-white font-medium">Full Stack Developer</strong> who designs and
+                                engineers high-performance web systems — Enterprise CRMs, SaaS platforms, dashboards and
+                                business automation tools — that help brands operate faster and smarter.
+                            </p>
+                            <p class="text-gray-400 font-light leading-relaxed mb-8 gsap-reveal">
+                                I turn complex business requirements into clean, scalable, production-ready software.
+                                From database architecture to pixel-perfect interfaces, I own the full product lifecycle
+                                and deliver work I'm proud to put my name on.
+                            </p>
+
+                            <!-- Highlights -->
+                            <div class="grid sm:grid-cols-2 gap-x-6 gap-y-5 mb-10">
+                                <div class="flex items-start gap-3 gsap-reveal">
+                                    <i class="fas fa-layer-group text-brand-purple text-lg mt-0.5"></i>
+                                    <div>
+                                        <h4 class="text-sm font-bold mb-0.5">End-to-End Builds</h4>
+                                        <p class="text-xs text-gray-500 font-light">Backend logic to frontend polish.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 gsap-reveal">
+                                    <i class="fas fa-bolt text-brand-cyan text-lg mt-0.5"></i>
+                                    <div>
+                                        <h4 class="text-sm font-bold mb-0.5">Performance First</h4>
+                                        <p class="text-xs text-gray-500 font-light">Fast, optimized & scalable systems.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 gsap-reveal">
+                                    <i class="fas fa-shield-halved text-green-400 text-lg mt-0.5"></i>
+                                    <div>
+                                        <h4 class="text-sm font-bold mb-0.5">Reliable & Secure</h4>
+                                        <p class="text-xs text-gray-500 font-light">Clean code, tested & maintainable.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 gsap-reveal">
+                                    <i class="fas fa-headset text-pink-400 text-lg mt-0.5"></i>
+                                    <div>
+                                        <h4 class="text-sm font-bold mb-0.5">Clear Communication</h4>
+                                        <p class="text-xs text-gray-500 font-light">On-time delivery & easy to work
+                                            with.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mini Stats -->
+                            <div class="flex flex-wrap gap-8 sm:gap-12 mb-10 border-y border-white/10 py-6 gsap-reveal">
+                                <div>
+                                    <div class="text-3xl md:text-4xl font-black font-display text-brand-purple">2+</div>
+                                    <div class="text-[11px] text-gray-500 font-tech tracking-widest uppercase">Years
+                                        Experience</div>
+                                </div>
+                                <div>
+                                    <div class="text-3xl md:text-4xl font-black font-display text-white">5+</div>
+                                    <div class="text-[11px] text-gray-500 font-tech tracking-widest uppercase">Projects
+                                        Delivered</div>
+                                </div>
+                                <div>
+                                    <div class="text-3xl md:text-4xl font-black font-display text-brand-cyan">100%</div>
+                                    <div class="text-[11px] text-gray-500 font-tech tracking-widest uppercase">Client
+                                        Satisfaction</div>
+                                </div>
+                            </div>
+
+                            <!-- Tech Stack -->
+                            <div class="flex flex-wrap gap-2 sm:gap-3 mb-10 gsap-reveal">
+                                <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-tech flex items-center gap-2"><i class="fab fa-laravel text-[#FF2D20]"></i> Laravel</span>
+                                <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-tech flex items-center gap-2"><i class="fab fa-php text-[#777BB4]"></i> PHP</span>
+                                <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-tech flex items-center gap-2"><i class="fab fa-js text-[#F7DF1E]"></i> JavaScript</span>
+                                <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-tech flex items-center gap-2"><i class="fas fa-database text-[#4479A1]"></i> MySQL</span>
+                                <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-tech flex items-center gap-2"><i class="fas fa-wind text-brand-cyan"></i> Tailwind</span>
+                                <span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-tech flex items-center gap-2"><i class="fab fa-git-alt text-[#F05032]"></i> Git</span>
+                            </div>
+
+                            <!-- CTAs -->
+                            <div class="flex flex-col sm:flex-row gap-4 gsap-reveal">
+                                <a href="#contact"
+                                    class="group relative px-8 py-4 bg-brand-purple rounded-full text-white font-bold tracking-wider text-sm overflow-hidden text-center magnetic"
+                                    data-cursor="HIRE">
+                                    <div
+                                        class="absolute inset-0 bg-white/20 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out">
+                                    </div>
+                                    <span class="relative z-10 flex items-center justify-center gap-3">
+                                        HIRE ME <i class="fas fa-paper-plane"></i>
+                                    </span>
+                                </a>
+                                <a href="#work"
+                                    class="px-8 py-4 bg-transparent border border-white/20 hover:border-white/50 rounded-full text-white font-bold tracking-wider text-sm transition-all text-center magnetic"
+                                    data-cursor="EXPLORE">
+                                    VIEW MY WORK
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT: Character Image -->
+                        <div class="order-1 lg:order-2 relative flex justify-center items-center min-h-[360px] sm:min-h-[460px] gsap-reveal">
+                            <!-- Rotating accent ring -->
+                            <div
+                                class="about-ring absolute w-[280px] h-[280px] sm:w-[380px] sm:h-[380px] rounded-full border border-dashed border-brand-purple/30">
+                            </div>
+                            <!-- Glow blob behind character -->
+                            <div
+                                class="absolute w-[260px] h-[260px] sm:w-[340px] sm:h-[340px] bg-gradient-to-tr from-brand-purple/40 via-indigo-500/20 to-brand-cyan/30 rounded-full blur-3xl">
+                            </div>
+
+                            <!-- Character -->
+                            <img src="assets/developer-character.png"
+                                alt="Shreyas Nalawade — Full Stack Developer"
+                                class="about-img relative z-10 w-[230px] sm:w-[320px] md:w-[400px] drop-shadow-[0_25px_50px_rgba(139,92,246,0.35)]" />
+
+                            <!-- Floating Badge: Available -->
+                            <div
+                                class="about-float absolute top-4 right-0 sm:right-4 glass-panel rounded-full px-4 py-2 flex items-center gap-2 z-20 shadow-lg">
+                                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                                <span class="text-[10px] sm:text-xs font-tech tracking-wider">Available for Work</span>
+                            </div>
+
+                            <!-- Floating Badge: Tech -->
+                            <div
+                                class="about-float-2 absolute bottom-10 left-0 sm:left-2 glass-panel rounded-xl px-4 py-3 z-20 shadow-lg">
+                                <div class="text-[9px] text-gray-500 font-tech tracking-widest uppercase mb-1">Core Stack
+                                </div>
+                                <div class="flex items-center gap-3 text-lg">
+                                    <i class="fab fa-laravel text-[#FF2D20]"></i>
+                                    <i class="fab fa-php text-[#777BB4]"></i>
+                                    <i class="fab fa-js text-[#F7DF1E]"></i>
+                                </div>
+                            </div>
+
+                            <!-- Floating Badge: Rating -->
+                            <div
+                                class="about-float absolute bottom-28 right-0 glass-panel rounded-xl px-4 py-2 z-20 shadow-lg hidden sm:block">
+                                <div class="flex text-yellow-500 text-[10px] gap-0.5 mb-1">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                        class="fas fa-star"></i><i class="fas fa-star"></i>
+                                </div>
+                                <div class="text-[9px] text-gray-400 font-tech">Trusted by Clients</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+           
+
+            <!-- Projects Showcase (Horizontal Scroll) -->
+            <section id="work" class="py-16 md:py-20 bg-brand-dark relative z-10 overflow-hidden">
+                <div class="container mx-auto px-6 lg:px-12 mb-8 md:mb-10">
+                    <h2 class="text-xs sm:text-sm font-tech text-brand-purple tracking-widest uppercase mb-4"><i
+                            class="fas fa-layer-group mr-2"></i> Case Studies</h2>
+                    <h3 class="text-3xl sm:text-4xl md:text-6xl font-black font-display">SYSTEMS DEPLOYED</h3>
+                    <p class="text-gray-500 text-xs font-tech tracking-widest uppercase mt-4 flex items-center gap-2">
+                        <i class="fas fa-arrows-left-right text-brand-purple animate-pulse"></i> Scroll to explore
+                    </p>
+                </div>
+
+                <!-- Pin Wrapper -->
+                <div id="projects-wrapper" class="relative w-full h-screen flex items-center overflow-hidden">
+                    <div id="projects-container"
+                        class="flex flex-nowrap gap-5 sm:gap-8 lg:gap-10 px-6 lg:px-12 w-max h-[78vh] sm:h-[72vh] md:h-[70vh]">
+
+                        <!-- Project 1: Dental CRM -->
+                        <div class="project-card w-[88vw] sm:w-[75vw] md:w-[62vw] lg:w-[55vw] h-full flex-shrink-0 glass-panel rounded-3xl overflow-hidden relative group magnetic cursor-pointer"
+                            data-cursor="VIEW SYS">
+                            <div class="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-black z-0"></div>
+                            <!-- Mockup visual -->
+                            <div
+                                class="absolute top-10 right-10 w-2/3 h-full bg-[#0a0a0a] border border-white/10 rounded-tl-2xl shadow-2xl z-10 transform translate-x-10 translate-y-10 group-hover:translate-x-5 group-hover:translate-y-5 transition-transform duration-700 p-6 flex flex-col gap-4">
+                                <!-- Dashboard header -->
+                                <div class="flex justify-between items-center border-b border-white/5 pb-4">
+                                    <div class="w-32 h-4 bg-white/10 rounded"></div>
+                                    <div class="flex gap-2">
+                                        <div class="w-8 h-8 rounded-full bg-white/10"></div>
+                                    </div>
+                                </div>
+                                <!-- Dashboard body -->
+                                <div class="flex gap-4 h-full">
+                                    <div class="w-1/4 space-y-3 hidden md:block">
+                                        <div class="w-full h-8 bg-brand-purple/20 rounded"></div>
+                                        <div class="w-full h-8 bg-white/5 rounded"></div>
+                                        <div class="w-full h-8 bg-white/5 rounded"></div>
+                                    </div>
+                                    <div class="flex-1 space-y-4">
+                                        <div class="flex gap-4">
+                                            <div class="flex-1 h-24 bg-white/5 rounded flex items-end p-2">
+                                                <div class="w-full h-1/2 bg-blue-500/30 rounded-t"></div>
+                                            </div>
+                                            <div class="flex-1 h-24 bg-white/5 rounded flex items-end p-2">
+                                                <div class="w-full h-3/4 bg-green-500/30 rounded-t"></div>
+                                            </div>
+                                        </div>
+                                        <div class="w-full h-40 bg-white/5 rounded p-4 relative overflow-hidden">
+                                            <div
+                                                class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-brand-purple/20 to-transparent">
+                                            </div>
+                                            <!-- Fake graph -->
+                                            <svg class="absolute bottom-0 w-full h-full" preserveAspectRatio="none"
+                                                viewBox="0 0 100 100">
+                                                <path d="M0,100 L0,50 Q25,20 50,60 T100,30 L100,100 Z"
+                                                    fill="rgba(139,92,246,0.3)" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Content -->
+                            <div class="relative z-20 w-full md:w-1/2 h-full p-6 sm:p-8 md:p-10 flex flex-col justify-center bg-black/55 md:bg-transparent backdrop-blur-sm md:backdrop-blur-none">
+                                <div class="text-xs font-tech text-brand-purple mb-4">01 // HEALTHCARE</div>
+                                <h4 class="text-2xl sm:text-3xl md:text-5xl font-bold font-display mb-4 sm:mb-6">Dental Clinic Management
+                                </h4>
+                                <ul class="space-y-3 mb-8 text-gray-400 font-light text-sm">
+                                    <li class="flex items-center gap-3"><i
+                                            class="fas fa-check text-brand-purple text-xs"></i> Patient Management &
+                                        History</li>
+                                    <li class="flex items-center gap-3"><i
+                                            class="fas fa-check text-brand-purple text-xs"></i> Smart Appointment
+                                        Booking</li>
+                                    <li class="flex items-center gap-3"><i
+                                            class="fas fa-check text-brand-purple text-xs"></i> Automated Billing &
+                                        Invoicing</li>
+                                    <li class="flex items-center gap-3"><i
+                                            class="fas fa-check text-brand-purple text-xs"></i> Digital Prescriptions
+                                    </li>
+                                </ul>
+                                <div class="flex gap-2 sm:gap-3 flex-wrap">
+                                    <span class="px-3 py-1 rounded bg-white/5 text-xs font-tech">Laravel 12</span>
+                                    <span class="px-3 py-1 rounded bg-white/5 text-xs font-tech">MySQL</span>
+                                    <span class="px-3 py-1 rounded bg-white/5 text-xs font-tech">Tailwind</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project 2: IP-TV -->
+                        <div class="project-card w-[88vw] sm:w-[75vw] md:w-[62vw] lg:w-[55vw] h-full flex-shrink-0 glass-panel rounded-3xl overflow-hidden relative group magnetic cursor-pointer"
+                            data-cursor="VIEW SYS">
+                            <div class="absolute inset-0 bg-gradient-to-br from-cyan-900/20 to-black z-0"></div>
+                            <!-- Mockup visual -->
+                            <div
+                                class="absolute top-1/2 left-10 w-[55%] h-4/5 bg-[#0a0a0a] border border-white/10 rounded-xl shadow-2xl z-10 transform -translate-y-1/2 -translate-x-5 group-hover:translate-x-0 transition-transform duration-700 p-6 hidden md:flex flex-col gap-4">
+                                <div class="flex justify-between items-center border-b border-white/5 pb-3">
+                                    <span class="text-[10px] text-brand-cyan font-tech">IPTV.CONTROLLER // LIVE
+                                        SCREENS</span>
+                                    <span class="text-[10px] text-green-500 font-tech flex items-center gap-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping"></span> 1,248
+                                        ACTIVE TVS
+                                    </span>
+                                </div>
+                                <div class="grid grid-cols-3 gap-3 flex-1">
+                                    <div
+                                        class="col-span-2 bg-white/5 rounded p-3 flex flex-col justify-between border border-white/5">
+                                        <div class="text-[10px] font-tech text-gray-500">ACTIVE CAMPAIGN</div>
+                                        <div class="text-xs font-bold text-white mb-2">Global Promo Campaign - Video #3
+                                        </div>
+                                        <div class="h-1 bg-white/10 rounded w-full mb-3">
+                                            <div class="h-full bg-brand-cyan w-3/4 rounded shadow-[0_0_10px_#06b6d4]">
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="relative flex-1 bg-black rounded overflow-hidden flex items-center justify-center border border-white/10">
+                                            <i class="fas fa-tv text-white/10 text-4xl"></i>
+                                            <div
+                                                class="absolute top-2 left-2 text-[8px] bg-red-600 px-1 rounded font-tech text-white uppercase animate-pulse">
+                                                BROADCASTING</div>
+                                            <div class="absolute bottom-2 right-2 text-[8px] text-gray-400 font-tech">
+                                                1080p Stream</div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="col-span-1 bg-white/5 rounded p-3 flex flex-col justify-between border border-white/5 text-center">
+                                        <div class="text-[10px] font-tech text-brand-purple">PAIR DEVICE</div>
+                                        <div class="my-auto">
+                                            <div class="text-[8px] text-gray-500 uppercase tracking-widest mb-1">Pairing
+                                                Code</div>
+                                            <div
+                                                class="text-lg font-black font-tech tracking-wider text-brand-purple bg-black py-2 rounded border border-white/10">
+                                                849 204</div>
+                                        </div>
+                                        <div class="text-[8px] text-gray-500 leading-tight">Insert code on Android TV to
+                                            pair instantly.</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Content -->
+                            <div
+                                class="relative z-20 w-full md:w-[42%] h-full p-6 sm:p-8 md:p-10 flex flex-col justify-center ml-auto bg-black/45 md:bg-transparent backdrop-blur-md md:backdrop-blur-none">
+                                <div class="text-xs font-tech text-brand-cyan mb-4">02 // ADVERTISING & BROADCASTING
+                                </div>
+                                <h4 class="text-2xl sm:text-3xl md:text-5xl font-bold font-display mb-4 sm:mb-6">IP-TV Control Engine</h4>
+                                <ul class="space-y-3 mb-8 text-gray-400 font-light text-sm">
+                                    <li class="flex items-center gap-3"><i
+                                            class="fas fa-check text-brand-cyan text-xs"></i> Global Single-Click Ads
+                                        Broadcast</li>
+                                    <li class="flex items-center gap-3"><i
+                                            class="fas fa-check text-brand-cyan text-xs"></i> Simple 6-Digit Code
+                                        Pairing Flow</li>
+                                    <li class="flex items-center gap-3"><i
+                                            class="fas fa-check text-brand-cyan text-xs"></i> Connected Device Scale
+                                        (Thousands)</li>
+                                    <li class="flex items-center gap-3"><i
+                                            class="fas fa-check text-brand-cyan text-xs"></i> Schedule Campaign
+                                        Playlists & Times</li>
+                                </ul>
+                                <div class="flex gap-2 sm:gap-3 flex-wrap">
+                                    <span class="px-3 py-1 rounded bg-white/5 text-xs font-tech">Laravel 12</span>
+                                    <span class="px-3 py-1 rounded bg-white/5 text-xs font-tech">MySQL</span>
+                                    <span class="px-3 py-1 rounded bg-white/5 text-xs font-tech">Android SDK</span>
+                                    <span class="px-3 py-1 rounded bg-white/5 text-xs font-tech">WebSockets</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project 3: Inventory System -->
+                        <div class="project-card w-[88vw] sm:w-[75vw] md:w-[62vw] lg:w-[55vw] h-full flex-shrink-0 glass-panel rounded-3xl overflow-hidden relative group magnetic cursor-pointer"
+                            data-cursor="VIEW SYS">
+                            <div class="absolute inset-0 bg-gradient-to-br from-cyan-900/20 to-black z-0"></div>
+                            <!-- Mockup visual -->
+                            <div
+                                class="absolute top-10 right-10 w-2/3 h-full bg-[#0a0a0a] border border-white/10 rounded-tl-2xl shadow-2xl z-10 transform translate-x-10 translate-y-10 group-hover:translate-x-5 group-hover:translate-y-5 transition-transform duration-700 p-6 flex flex-col gap-4">
+                                <div class="w-full h-8 bg-white/5 flex gap-2 items-center px-4 rounded">
+                                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                                </div>
+                                <div class="grid grid-cols-4 gap-4 flex-1">
+                                    <div class="col-span-1 space-y-2">
+                                        <div class="h-6 bg-white/10 rounded w-full"></div>
+                                        <div class="h-6 bg-white/5 rounded w-3/4"></div>
+                                        <div class="h-6 bg-white/5 rounded w-5/6"></div>
+                                    </div>
+                                    <div class="col-span-3 bg-white/5 rounded p-4 flex flex-col gap-2">
+                                        <div class="h-8 bg-brand-cyan/20 w-full rounded"></div>
+                                        <div class="flex-1 border border-white/5 rounded"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Content -->
+                            <div class="relative z-20 w-full md:w-1/2 h-full p-6 sm:p-8 md:p-10 flex flex-col justify-center bg-black/55 md:bg-transparent backdrop-blur-sm md:backdrop-blur-none">
+                                <div class="text-xs font-tech text-brand-cyan mb-4">03 // INVENTORY & FINANCE</div>
+                                <h4 class="text-2xl sm:text-3xl md:text-5xl font-bold font-display mb-4 sm:mb-6">Smart Inventory Manager
+                                </h4>
+                                <ul class="space-y-3 mb-8 text-gray-400 font-light text-sm">
+                                    <li class="flex items-center gap-3"><i
+                                            class="fas fa-check text-brand-cyan text-xs"></i> Daily Vashi Market Stock
+                                        Intake
+                                    </li>
+                                    <li class="flex items-center gap-3"><i
+                                            class="fas fa-check text-brand-cyan text-xs"></i> Bill Payments Tracking
+                                        (Paid/Unpaid)
+                                    </li>
+                                    <li class="flex items-center gap-3"><i
+                                            class="fas fa-check text-brand-cyan text-xs"></i> Ledger Records & Daily
+                                        Income Tracker</li>
+                                    <li class="flex items-center gap-3"><i
+                                            class="fas fa-check text-brand-cyan text-xs"></i> Smart Credit Interest
+                                        Calculations
+                                    </li>
+                                </ul>
+                                <div class="flex gap-3 flex-wrap">
+                                    <span class="px-3 py-1 rounded bg-white/5 text-xs font-tech">Laravel 12</span>
+                                    <span class="px-3 py-1 rounded bg-white/5 text-xs font-tech">Vashi Market CRM</span>
+                                    <span class="px-3 py-1 rounded bg-white/5 text-xs font-tech">Interest Engine</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project 4: WhatsApp Campaign -->
+                        <div class="project-card w-[88vw] sm:w-[75vw] md:w-[62vw] lg:w-[55vw] h-full flex-shrink-0 glass-panel rounded-3xl overflow-hidden relative group magnetic cursor-pointer"
+                            data-cursor="VIEW SYS">
+                            <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 to-black z-0"></div>
+
+                            <!-- Mockup Visual -->
+                            <div
+                                class="absolute top-1/2 left-10 w-[55%] h-4/5 bg-[#0a0a0a] border border-white/10 rounded-xl shadow-2xl z-10 transform -translate-y-1/2 -translate-x-5 group-hover:translate-x-0 transition-transform duration-700 p-6 hidden md:flex flex-col gap-4">
+                                <div class="w-full flex-1 border border-white/5 rounded-lg flex">
+                                    <div class="w-1/3 border-r border-white/5 p-4 space-y-4">
+                                        <div class="h-10 bg-white/5 rounded-full flex items-center px-4">
+                                            <div class="w-4 h-4 rounded-full bg-white/20"></div>
+                                        </div>
+                                        <div class="h-12 bg-green-500/20 rounded flex items-center px-3 gap-3">
+                                            <div class="w-8 h-8 rounded-full bg-green-500/50"></div>
+                                            <div class="flex-1 h-3 bg-white/20 rounded"></div>
+                                        </div>
+                                        <div class="h-12 bg-white/5 rounded flex items-center px-3 gap-3">
+                                            <div class="w-8 h-8 rounded-full bg-white/10"></div>
+                                            <div class="flex-1 h-3 bg-white/10 rounded"></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex-1 p-6 flex flex-col justify-end gap-4 relative bg-[#050505]">
+                                        <div class="w-2/3 h-16 bg-white/5 rounded-xl rounded-tl-none self-start"></div>
+                                        <div class="w-2/3 h-16 bg-green-600/20 rounded-xl rounded-tr-none self-end">
+                                        </div>
+                                        <div class="w-full h-12 bg-white/5 rounded-full mt-4"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Content -->
+                            <div
+                                class="relative z-20 w-full md:w-[42%] h-full p-6 sm:p-8 md:p-10 flex flex-col justify-center ml-auto bg-black/45 md:bg-transparent backdrop-blur-md md:backdrop-blur-none">
+                                <div class="text-xs font-tech text-green-500 mb-4">04 // MARKETING AUTOMATION</div>
+                                <h4 class="text-2xl sm:text-3xl md:text-5xl font-bold font-display mb-4 sm:mb-6">Bulk WhatsApp & Email
+                                    Engine</h4>
+                                <ul class="space-y-3 mb-8 text-gray-400 font-light text-sm">
+                                    <li class="flex items-center gap-3"><i
+                                            class="fas fa-check text-green-500 text-xs"></i> Simultaneous WhatsApp &
+                                        Email Campaigns</li>
+                                    <li class="flex items-center gap-3"><i
+                                            class="fas fa-check text-green-500 text-xs"></i> High-Speed Delivery (Lakhs
+                                        of Msg/Min)</li>
+                                    <li class="flex items-center gap-3"><i
+                                            class="fas fa-check text-green-500 text-xs"></i> Personalized Media &
+                                        Chatbot Flows</li>
+                                    <li class="flex items-center gap-3"><i
+                                            class="fas fa-check text-green-500 text-xs"></i> Detailed Per-Contact
+                                        Download Reports</li>
+                                </ul>
+                                <div class="flex gap-3 flex-wrap">
+                                    <span class="px-3 py-1 rounded bg-white/5 text-xs font-tech">Laravel 12</span>
+                                    <span class="px-3 py-1 rounded bg-white/5 text-xs font-tech">WhatsApp Cloud</span>
+                                    <span class="px-3 py-1 rounded bg-white/5 text-xs font-tech">Email SMTP</span>
+                                    <span class="px-3 py-1 rounded bg-white/5 text-xs font-tech">Redis</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- Frontend Projects Showcase -->
+            <section id="frontend-work" class="py-20 md:py-32 relative z-10 bg-black/60 border-t border-white/5">
+                <div class="container mx-auto px-6 lg:px-12">
+                    <div class="mb-20 md:flex justify-between items-end">
+                        <div class="max-w-3xl">
+                            <h2
+                                class="text-sm font-tech text-brand-cyan tracking-widest uppercase mb-4 gsap-reveal section-title">
+                                <i class="fas fa-desktop mr-2"></i> Client Interfaces
+                            </h2>
+                            <h3
+                                class="text-4xl md:text-6xl font-black font-display leading-tight gsap-reveal section-title">
+                                FRONTEND SHOWCASE</h3>
+                        </div>
+                        <p class="text-gray-400 max-w-sm mt-6 md:mt-0 font-light gsap-reveal section-title">Interactive,
+                            pixel-perfect user interfaces crafted with precision, focus on UX, and high-fidelity
+                            animations.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Frontend Project 1 -->
+                        <a href="http://sharashri.online/" target="_blank" rel="noopener noreferrer"
+                            class="glass-panel p-8 rounded-3xl glass-panel-hover tilt-card gsap-reveal flex flex-col justify-between cursor-pointer group"
+                            data-tilt data-tilt-max="5" data-tilt-glare data-tilt-max-glare="0.2">
+                            <div>
+                                <!-- Mockup Screen -->
+                                <div
+                                    class="w-full h-44 bg-[#0a0a0a] border border-white/10 rounded-xl overflow-hidden mb-8 p-3 flex flex-col gap-2 relative transition-colors">
+                                    <div class="flex items-center gap-1.5 border-b border-white/5 pb-2">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-red-500/80"></span>
+                                        <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></span>
+                                        <span class="w-2.5 h-2.5 rounded-full bg-green-500/80"></span>
+                                        <span
+                                            class="text-[8px] font-tech text-gray-600 ml-2">sharashri.online</span>
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-2 flex-1">
+                                        <div class="col-span-1 bg-white/5 rounded p-2 flex flex-col justify-between">
+                                            <div class="w-full h-2 bg-amber-500/20 rounded"></div>
+                                            <div class="space-y-1.5">
+                                                <div class="w-3/4 h-1 bg-white/5 rounded"></div>
+                                                <div class="w-1/2 h-1 bg-white/5 rounded"></div>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="col-span-2 bg-white/5 rounded p-2 flex flex-col justify-between relative overflow-hidden">
+                                            <div class="flex justify-between items-center">
+                                                <div class="w-12 h-2 bg-amber-500/30 rounded"></div>
+                                                <i class="fas fa-feather-pointed text-amber-500/50 text-xs"></i>
+                                            </div>
+                                            <div class="h-12 bg-black/40 rounded flex items-center justify-center gap-1 p-1">
+                                                <i class="fas fa-masks-theater text-amber-500/40 text-lg"></i>
+                                                <i class="fas fa-drum text-amber-400/60 text-xl"></i>
+                                                <i class="fas fa-palette text-amber-500/40 text-lg"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h4 class="text-2xl font-bold font-display mb-3 group-hover:text-amber-400 transition-colors">शराश्री — Folk Art & Culture</h4>
+                                <p class="text-gray-400 text-sm font-light leading-relaxed mb-6">A cultural showcase site
+                                    dedicated to preserving and promoting regional folk art (लोककला) and heritage with an
+                                    elegant, traditional-meets-modern presentation.</p>
+                                <ul class="space-y-2 mb-8 text-gray-500 text-xs font-light">
+                                    <li class="flex items-center gap-2"><i class="fas fa-check text-amber-400"></i>
+                                        Heritage & Culture Storytelling Layout</li>
+                                    <li class="flex items-center gap-2"><i class="fas fa-check text-amber-400"></i>
+                                        Marathi Typography & Responsive Design</li>
+                                    <li class="flex items-center gap-2"><i class="fas fa-check text-amber-400"></i>
+                                        Event & Gallery Showcase Sections</li>
+                                </ul>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex gap-2">
+                                    <span class="px-3 py-1 rounded bg-white/5 text-[10px] font-tech">HTML5 / CSS3</span>
+                                    <span class="px-3 py-1 rounded bg-white/5 text-[10px] font-tech">Tailwind CSS</span>
+                                    <span class="px-3 py-1 rounded bg-white/5 text-[10px] font-tech">JavaScript</span>
+                                </div>
+                                <i class="fas fa-arrow-up-right-from-square text-amber-400 text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                            </div>
+                        </a>
+
+                        <!-- Frontend Project 2 -->
+                        <a href="http://dukandari.ai/" target="_blank" rel="noopener noreferrer"
+                            class="glass-panel p-8 rounded-3xl glass-panel-hover tilt-card gsap-reveal flex flex-col justify-between cursor-pointer group"
+                            data-tilt data-tilt-max="5" data-tilt-glare data-tilt-max-glare="0.2">
+                            <div>
+                                <!-- Mockup Screen -->
+                                <div
+                                    class="w-full h-44 bg-[#0a0a0a] border border-white/10 rounded-xl overflow-hidden mb-8 p-3 flex flex-col justify-between relative transition-colors">
+                                    <div class="flex justify-between items-center border-b border-white/5 pb-2">
+                                        <span class="text-[8px] font-tech text-gray-600">dukandari.ai</span>
+                                        <i class="fas fa-robot text-gray-500 text-xs"></i>
+                                    </div>
+                                    <div class="flex gap-3 flex-1 pt-2">
+                                        <div
+                                            class="w-2/5 bg-white/5 rounded overflow-hidden relative flex items-center justify-center border border-white/5">
+                                            <i class="fas fa-bullhorn text-brand-purple/30 text-3xl"></i>
+                                            <div
+                                                class="absolute bottom-1 right-1 text-[6px] bg-brand-purple px-1 rounded text-white font-tech uppercase">
+                                                AI</div>
+                                        </div>
+                                        <div class="flex-1 flex flex-col justify-between py-1">
+                                            <div>
+                                                <div class="w-3/4 h-3 bg-white/10 rounded mb-1"></div>
+                                                <div class="w-1/2 h-2 bg-white/5 rounded"></div>
+                                            </div>
+                                            <div class="flex justify-between items-center">
+                                                <div class="flex gap-1">
+                                                    <i class="fab fa-google text-[8px] text-brand-purple/60"></i>
+                                                    <i class="fab fa-facebook text-[8px] text-brand-purple/60"></i>
+                                                    <i class="fab fa-instagram text-[8px] text-brand-purple/60"></i>
+                                                    <i class="fab fa-whatsapp text-[8px] text-brand-purple/60"></i>
+                                                </div>
+                                                <div
+                                                    class="w-16 h-5 bg-brand-purple rounded-full flex items-center justify-center text-[8px] font-tech text-white">
+                                                    GET STARTED</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h4 class="text-2xl font-bold font-display mb-3 group-hover:text-brand-purple transition-colors">Dukandari.ai — AI Marketing</h4>
+                                <p class="text-gray-400 text-sm font-light leading-relaxed mb-6">A complete AI marketing
+                                    platform landing page that connects Google, Facebook, Instagram & WhatsApp to automate
+                                    business growth with AI-driven content and analytics.</p>
+                                <ul class="space-y-2 mb-8 text-gray-500 text-xs font-light">
+                                    <li class="flex items-center gap-2"><i class="fas fa-check text-brand-purple"></i>
+                                        Conversion-Focused SaaS Landing Page</li>
+                                    <li class="flex items-center gap-2"><i class="fas fa-check text-brand-purple"></i>
+                                        Animated Hero, Pricing & Testimonials</li>
+                                    <li class="flex items-center gap-2"><i class="fas fa-check text-brand-purple"></i>
+                                        Multi-Channel Integration Showcase</li>
+                                </ul>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex gap-2">
+                                    <span class="px-3 py-1 rounded bg-white/5 text-[10px] font-tech">HTML5 / CSS3</span>
+                                    <span class="px-3 py-1 rounded bg-white/5 text-[10px] font-tech">GSAP Animations</span>
+                                    <span class="px-3 py-1 rounded bg-white/5 text-[10px] font-tech">JavaScript</span>
+                                </div>
+                                <i class="fas fa-arrow-up-right-from-square text-brand-purple text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                            </div>
+                        </a>
+
+                    
+                    </div>
+                </div>
+            </section>
+
+            <!-- Skills / Technology Core -->
+            <section class="py-20 md:py-32 relative z-10 overflow-hidden" id="tech">
+                <div class="container mx-auto px-6 lg:px-12">
+                    <div class="text-center mb-20">
+                        <h2 class="text-sm font-tech text-brand-purple tracking-widest uppercase mb-4 gsap-reveal"><i
+                                class="fas fa-microchip mr-2"></i> Technology Stack</h2>
+                        <h3 class="text-4xl md:text-5xl font-black font-display gsap-reveal">THE DEVELOPMENT <span
+                                class="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple to-brand-cyan">CORE</span>
+                        </h3>
+                    </div>
+
+                    <div
+                        class="relative w-full max-w-4xl mx-auto h-[340px] sm:h-[480px] md:h-[600px] flex items-center justify-center gsap-reveal scale-up overflow-hidden">
+                        <!-- Orbit Visualization -->
+                        <div class="orbit-container">
+                            <!-- Center -->
+                            <div
+                                class="orbit-center w-32 h-32 rounded-full bg-brand-black border-2 border-brand-purple shadow-[0_0_50px_rgba(139,92,246,0.4)] flex items-center justify-center flex-col z-20">
+                                <i class="fas fa-code text-3xl text-white mb-2"></i>
+                                <span class="text-[10px] font-tech font-bold tracking-widest text-brand-purple">SSn
+                                    Go</span>
+                            </div>
+
+                            <!-- Ring 1 (Inner) -->
+                            <div class="orbit-ring w-[250px] h-[250px] z-10">
+                                <div class="orbit-item shadow-[0_0_15px_rgba(255,255,255,0.1)]"><i
+                                        class="fab fa-laravel text-[#FF2D20] text-xl"></i></div>
+                                <div class="orbit-item" style="top: 100%;"><i
+                                        class="fab fa-php text-[#777BB4] text-xl"></i></div>
+                                <div class="orbit-item" style="left: 0; top: 50%;"><i
+                                        class="fas fa-database text-[#4479A1] text-xl"></i></div>
+                                <div class="orbit-item" style="left: 100%; top: 50%;"><i
+                                        class="fab fa-js text-[#F7DF1E] text-xl"></i></div>
+                            </div>
+
+                            <!-- Ring 2 (Middle) -->
+                            <div class="orbit-ring orbit-ring-2 z-10">
+                                <div class="orbit-item" style="top: 15%; left: 15%;"><i
+                                        class="fab fa-css3-alt text-[#1572B6] text-xl"></i></div>
+                                <div class="orbit-item" style="top: 85%; left: 85%;"><i
+                                        class="fab fa-html5 text-[#E34F26] text-xl"></i></div>
+                                <div class="orbit-item" style="top: 15%; left: 85%;"><i
+                                        class="fas fa-wind text-[#06B6D4] text-xl"></i></div> <!-- Tailwind proxy -->
+                                <div class="orbit-item" style="top: 85%; left: 15%;"><i
+                                        class="fab fa-git-alt text-[#F05032] text-xl"></i></div>
+                            </div>
+
+                            <!-- Ring 3 (Outer) -->
+                            <div class="orbit-ring orbit-ring-3 z-10 opacity-60">
+                                <div class="orbit-item" style="top: 0; left: 50%;"><i
+                                        class="fab fa-linux text-white text-xl"></i></div>
+                                <div class="orbit-item" style="top: 100%; left: 50%;"><i
+                                        class="fas fa-server text-gray-400 text-xl"></i></div>
+                                <div class="orbit-item" style="top: 50%; left: 0;"><i
+                                        class="fas fa-credit-card text-green-400 text-xl"></i></div>
+                                <div class="orbit-item" style="top: 50%; left: 100%;"><i
+                                        class="fas fa-mobile-alt text-blue-400 text-xl"></i></div>
+                                <div class="orbit-item" style="top: 20%; left: 20%;"><i
+                                        class="fas fa-lock text-yellow-400 text-xl"></i></div>
+                                <div class="orbit-item" style="top: 80%; left: 80%;"><i
+                                        class="fas fa-paint-brush text-pink-400 text-xl"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tech List Text Fallback / Details -->
+                    <div class="flex flex-wrap justify-center gap-4 mt-10 max-w-3xl mx-auto gsap-reveal">
+                        <span
+                            class="px-4 py-2 border border-white/10 rounded-full text-sm bg-white/5 hover:bg-brand-purple hover:border-brand-purple transition-colors cursor-pointer">Laravel
+                            Architecture</span>
+                        <span
+                            class="px-4 py-2 border border-white/10 rounded-full text-sm bg-white/5 hover:bg-brand-purple hover:border-brand-purple transition-colors cursor-pointer">RESTful
+                            APIs</span>
+                        <span
+                            class="px-4 py-2 border border-white/10 rounded-full text-sm bg-white/5 hover:bg-brand-cyan hover:border-brand-cyan transition-colors cursor-pointer">Advanced
+                            jQuery / JS</span>
+                        <span
+                            class="px-4 py-2 border border-white/10 rounded-full text-sm bg-white/5 hover:bg-brand-purple hover:border-brand-purple transition-colors cursor-pointer">Complex
+                            Database Design</span>
+                        <span
+                            class="px-4 py-2 border border-white/10 rounded-full text-sm bg-white/5 hover:bg-brand-cyan hover:border-brand-cyan transition-colors cursor-pointer">Payment
+                            Gateways</span>
+                        <span
+                            class="px-4 py-2 border border-white/10 rounded-full text-sm bg-white/5 hover:bg-brand-purple hover:border-brand-purple transition-colors cursor-pointer">Server
+                            Administration</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Process Timeline Section -->
+            <section id="process" class="py-20 md:py-32 relative z-10 bg-[#080808]">
+                <div class="container mx-auto px-6 lg:px-12">
+                    <div class="mb-20">
+                        <h2 class="text-sm font-tech text-brand-cyan tracking-widest uppercase mb-4 gsap-reveal"><i
+                                class="fas fa-cogs mr-2"></i> Development Pipeline</h2>
+                        <h3 class="text-4xl md:text-5xl font-black font-display gsap-reveal">EXECUTION <span
+                                class="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan to-blue-500">PROTOCOL</span>
+                        </h3>
+                    </div>
+
+                    <div class="relative max-w-4xl mx-auto">
+                        <!-- Vertical Line -->
+                        <div
+                            class="absolute left-[27px] md:left-1/2 top-0 bottom-0 w-[2px] bg-white/10 transform md:-translate-x-1/2 rounded">
+                            <div class="absolute top-0 left-0 w-full bg-gradient-to-b from-brand-purple via-brand-cyan to-brand-purple"
+                                id="timeline-progress" style="height: 0%;"></div>
+                        </div>
+
+                        <!-- Timeline Items -->
+                        <div class="space-y-24">
+                            <!-- Step 1 -->
+                            <div class="relative flex flex-col md:flex-row items-center timeline-item gsap-reveal">
+                                <div class="hidden md:block w-1/2 pr-16 text-right">
+                                    <h4 class="text-2xl font-bold font-display text-white mb-2">Requirement Analysis
+                                    </h4>
+                                    <p class="text-gray-400 font-light text-sm">Deep dive into business logic, user
+                                        flows, and technical requirements before writing a single line of code.</p>
+                                </div>
+                                <div
+                                    class="absolute left-0 md:left-1/2 w-14 h-14 bg-brand-black border-2 border-white/20 rounded-full flex items-center justify-center transform md:-translate-x-1/2 z-10 timeline-dot transition-colors duration-500">
+                                    <span class="font-tech font-bold text-white/50">01</span>
+                                </div>
+                                <div class="md:hidden w-full pl-20">
+                                    <h4 class="text-xl font-bold font-display text-white mb-2">Requirement Analysis</h4>
+                                    <p class="text-gray-400 font-light text-sm">Deep dive into business logic, user
+                                        flows, and technical requirements before writing a single line of code.</p>
+                                </div>
+                                <div class="hidden md:block w-1/2 pl-16">
+                                    <div class="glass-panel p-4 rounded-xl opacity-50"><i
+                                            class="fas fa-search text-brand-purple text-2xl"></i></div>
+                                </div>
+                            </div>
+
+                            <!-- Step 2 -->
+                            <div
+                                class="relative flex flex-col md:flex-row-reverse items-center timeline-item gsap-reveal">
+                                <div class="hidden md:block w-1/2 pl-16 text-left">
+                                    <h4 class="text-2xl font-bold font-display text-white mb-2">UI/UX Architecture</h4>
+                                    <p class="text-gray-400 font-light text-sm">Designing premium, intuitive, and
+                                        cinematic interfaces tailored for enterprise software and dashboards.</p>
+                                </div>
+                                <div
+                                    class="absolute left-0 md:left-1/2 w-14 h-14 bg-brand-black border-2 border-white/20 rounded-full flex items-center justify-center transform md:-translate-x-1/2 z-10 timeline-dot transition-colors duration-500">
+                                    <span class="font-tech font-bold text-white/50">02</span>
+                                </div>
+                                <div class="md:hidden w-full pl-20">
+                                    <h4 class="text-xl font-bold font-display text-white mb-2">UI/UX Architecture</h4>
+                                    <p class="text-gray-400 font-light text-sm">Designing premium, intuitive, and
+                                        cinematic interfaces tailored for enterprise software.</p>
+                                </div>
+                                <div class="hidden md:flex w-1/2 pr-16 justify-end">
+                                    <div class="glass-panel p-4 rounded-xl opacity-50"><i
+                                            class="fas fa-pen-nib text-brand-cyan text-2xl"></i></div>
+                                </div>
+                            </div>
+
+                            <!-- Step 3 -->
+                            <div class="relative flex flex-col md:flex-row items-center timeline-item gsap-reveal">
+                                <div class="hidden md:block w-1/2 pr-16 text-right">
+                                    <h4 class="text-2xl font-bold font-display text-white mb-2">Full Stack Development
+                                    </h4>
+                                    <p class="text-gray-400 font-light text-sm">Building robust backend logic with
+                                        Laravel/PHP and dynamic, responsive frontends with modern JS.</p>
+                                </div>
+                                <div
+                                    class="absolute left-0 md:left-1/2 w-14 h-14 bg-brand-black border-2 border-white/20 rounded-full flex items-center justify-center transform md:-translate-x-1/2 z-10 timeline-dot transition-colors duration-500">
+                                    <span class="font-tech font-bold text-white/50">03</span>
+                                </div>
+                                <div class="md:hidden w-full pl-20">
+                                    <h4 class="text-xl font-bold font-display text-white mb-2">Development</h4>
+                                    <p class="text-gray-400 font-light text-sm">Building robust backend logic and
+                                        dynamic, responsive frontends.</p>
+                                </div>
+                                <div class="hidden md:block w-1/2 pl-16">
+                                    <div class="glass-panel p-4 rounded-xl opacity-50"><i
+                                            class="fas fa-code text-blue-500 text-2xl"></i></div>
+                                </div>
+                            </div>
+
+                            <!-- Step 4 -->
+                            <div
+                                class="relative flex flex-col md:flex-row-reverse items-center timeline-item gsap-reveal">
+                                <div class="hidden md:block w-1/2 pl-16 text-left">
+                                    <h4 class="text-2xl font-bold font-display text-white mb-2">Testing & Deployment
+                                    </h4>
+                                    <p class="text-gray-400 font-light text-sm">Rigorous QA, security testing, and
+                                        deployment to high-performance cloud infrastructure (Linux/VPS).</p>
+                                </div>
+                                <div
+                                    class="absolute left-0 md:left-1/2 w-14 h-14 bg-brand-black border-2 border-white/20 rounded-full flex items-center justify-center transform md:-translate-x-1/2 z-10 timeline-dot transition-colors duration-500">
+                                    <span class="font-tech font-bold text-white/50">04</span>
+                                </div>
+                                <div class="md:hidden w-full pl-20">
+                                    <h4 class="text-xl font-bold font-display text-white mb-2">Deployment</h4>
+                                    <p class="text-gray-400 font-light text-sm">Rigorous QA, security testing, and
+                                        deployment to cloud infrastructure.</p>
+                                </div>
+                                <div class="hidden md:flex w-1/2 pr-16 justify-end">
+                                    <div class="glass-panel p-4 rounded-xl opacity-50"><i
+                                            class="fas fa-rocket text-green-500 text-2xl"></i></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimonials -->
+            <section class="py-24 relative z-10">
+                <div class="container mx-auto px-6 lg:px-12">
+                    <div class="text-center mb-16">
+                        <h2 class="text-sm font-tech text-yellow-500 tracking-widest uppercase mb-4 gsap-reveal">Client
+                            Verification</h2>
+                        <h3 class="text-4xl md:text-5xl font-black font-display gsap-reveal">INDUSTRY <span
+                                class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-orange-500">TRUST</span>
+                        </h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="glass-panel p-8 rounded-2xl relative tilt-card gsap-reveal" data-tilt
+                            data-tilt-max="10">
+                            <i class="fas fa-quote-left text-4xl text-white/10 absolute top-6 right-6"></i>
+                            <div class="flex text-yellow-500 text-sm mb-4">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                    class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <p class="text-gray-300 font-light italic mb-6 leading-relaxed">"The custom CRM completely
+                                transformed how we handle our logistics. The interface feels premium and the backend
+                                handles thousands of entries without a sweat."</p>
+                            <div class="flex items-center gap-4 border-t border-white/10 pt-4 mt-auto">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center font-tech font-bold text-sm">
+                                    MR</div>
+                                <div>
+                                    <h5 class="font-bold text-sm">Operations Director</h5>
+                                    <span class="text-xs text-gray-500 font-tech">Logistics Firm</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass-panel p-8 rounded-2xl relative tilt-card gsap-reveal transform md:-translate-y-8"
+                            data-tilt data-tilt-max="10"
+                            style="border-color: rgba(139,92,246,0.3); box-shadow: 0 10px 30px rgba(139,92,246,0.1);">
+                            <i class="fas fa-quote-left text-4xl text-brand-purple/20 absolute top-6 right-6"></i>
+                            <div class="flex text-yellow-500 text-sm mb-4">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                    class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <p class="text-gray-300 font-light italic mb-6 leading-relaxed">"We needed a highly complex
+                                SaaS platform built from scratch. He delivered a system that looks like it cost $50,000.
+                                Exceptional architecture."</p>
+                            <div class="flex items-center gap-4 border-t border-white/10 pt-4 mt-auto">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-brand-purple/20 text-brand-purple flex items-center justify-center font-tech font-bold text-sm">
+                                    SJ</div>
+                                <div>
+                                    <h5 class="font-bold text-sm">Startup Founder</h5>
+                                    <span class="text-xs text-brand-purple font-tech">Jeevika Accounting</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass-panel p-8 rounded-2xl relative tilt-card gsap-reveal" data-tilt
+                            data-tilt-max="10">
+                            <i class="fas fa-quote-left text-4xl text-white/10 absolute top-6 right-6"></i>
+                            <div class="flex text-yellow-500 text-sm mb-4">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                    class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <p class="text-gray-300 font-light italic mb-6 leading-relaxed">"Our dental clinic's
+                                appointment and billing system was a mess. This custom solution streamlined everything.
+                                Highly professional developer."</p>
+                            <div class="flex items-center gap-4 border-t border-white/10 pt-4 mt-auto">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center font-tech font-bold text-sm">
+                                    DA</div>
+                                <div>
+                                    <h5 class="font-bold text-sm">Samartha Dentist</h5>
+                                    <span class="text-xs text-gray-500 font-tech">Premium Healthcare</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contact" class="py-20 md:py-32 relative z-10 overflow-hidden">
+                <!-- Abstract glowing orb behind contact form -->
+                <div
+                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand-purple rounded-full mix-blend-screen filter blur-[150px] opacity-10 pointer-events-none">
+                </div>
+
+                <div class="container mx-auto px-6 lg:px-12 relative z-10">
+                    <div
+                        class="max-w-5xl mx-auto glass-panel p-8 md:p-16 rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden">
+
+                        <div
+                            class="absolute top-0 right-0 w-64 h-64 bg-brand-cyan/20 rounded-full mix-blend-screen filter blur-[80px]">
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
+                            <div class="gsap-reveal">
+                                <h2 class="text-4xl sm:text-5xl md:text-6xl font-black font-display mb-6">INITIATE <br /><span
+                                        class="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple to-brand-cyan">PROTOCOL</span>
+                                </h2>
+                                <p class="text-gray-400 font-light mb-10 leading-relaxed">Ready to build a
+                                    high-performance software system? Let's discuss your enterprise requirements,
+                                    architecture, and deployment timeline.</p>
+
+                                <div class="space-y-6">
+                                    <div class="flex items-center gap-4">
+                                        <div
+                                            class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-brand-purple border border-white/10">
+                                            <i class="fas fa-envelope"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-xs text-gray-500 font-tech tracking-wider uppercase mb-1">
+                                                Secure Channel</div>
+                                            <div class="font-bold">shreyashnalawade09@gmail.com</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-4">
+                                        <div
+                                            class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-brand-cyan border border-white/10">
+                                            <i class="fas fa-globe"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-xs text-gray-500 font-tech tracking-wider uppercase mb-1">
+                                                Location</div>
+                                            <div class="font-bold">Remote / Global Deployment</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <form class="space-y-6 gsap-reveal" id="contact-form">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    <div class="relative group">
+                                        <input type="text" id="name"
+                                            class="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-purple transition-colors peer"
+                                            placeholder=" " required>
+                                        <label for="name"
+                                            class="absolute left-4 top-3 text-gray-500 text-sm transition-all peer-focus:-top-3 peer-focus:text-xs peer-focus:text-brand-purple peer-focus:bg-[#0f0f0f] peer-focus:px-1 peer-valid:-top-3 peer-valid:text-xs peer-valid:bg-[#0f0f0f] peer-valid:px-1 pointer-events-none font-tech tracking-wider">NAME</label>
+                                    </div>
+                                    <div class="relative group">
+                                        <input type="email" id="email"
+                                            class="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-purple transition-colors peer"
+                                            placeholder=" " required>
+                                        <label for="email"
+                                            class="absolute left-4 top-3 text-gray-500 text-sm transition-all peer-focus:-top-3 peer-focus:text-xs peer-focus:text-brand-purple peer-focus:bg-[#0f0f0f] peer-focus:px-1 peer-valid:-top-3 peer-valid:text-xs peer-valid:bg-[#0f0f0f] peer-valid:px-1 pointer-events-none font-tech tracking-wider">EMAIL</label>
+                                    </div>
+                                </div>
+                                <div class="relative group">
+                                    <input type="tel" id="phone"
+                                        class="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-purple transition-colors peer"
+                                        placeholder=" ">
+                                    <label for="phone"
+                                        class="absolute left-4 top-3 text-gray-500 text-sm transition-all peer-focus:-top-3 peer-focus:text-xs peer-focus:text-brand-purple peer-focus:bg-[#0f0f0f] peer-focus:px-1 peer-[:not(:placeholder-shown)]:-top-3 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-[#0f0f0f] peer-[:not(:placeholder-shown)]:px-1 pointer-events-none font-tech tracking-wider">PHONE
+                                        (OPTIONAL)</label>
+                                </div>
+                                <div class="relative group">
+                                    <select id="system-type"
+                                        class="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-purple transition-colors font-tech text-sm appearance-none cursor-pointer">
+                                        <option value="" disabled selected>SELECT SYSTEM TYPE</option>
+                                        <option value="crm">Enterprise CRM</option>
+                                        <option value="saas">SaaS Platform</option>
+                                        <option value="automation">Business Automation</option>
+                                        <option value="dashboard">Data Dashboard</option>
+                                        <option value="website">Premium Website</option>
+                                    </select>
+                                    <i
+                                        class="fas fa-chevron-down absolute right-4 top-4 text-gray-500 pointer-events-none text-xs"></i>
+                                </div>
+                                <div class="relative group">
+                                    <textarea id="message" rows="4"
+                                        class="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-purple transition-colors peer resize-none"
+                                        placeholder=" " required></textarea>
+                                    <label for="message"
+                                        class="absolute left-4 top-3 text-gray-500 text-sm transition-all peer-focus:-top-3 peer-focus:text-xs peer-focus:text-brand-purple peer-focus:bg-[#0f0f0f] peer-focus:px-1 peer-valid:-top-3 peer-valid:text-xs peer-valid:bg-[#0f0f0f] peer-valid:px-1 pointer-events-none font-tech tracking-wider">SYSTEM
+                                        REQUIREMENTS</label>
+                                </div>
+                                <button type="submit" id="contact-submit"
+                                    class="w-full py-4 bg-brand-purple hover:bg-brand-purple/80 text-white font-bold rounded-lg transition-all shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.6)] font-tech tracking-widest magnetic"
+                                    data-cursor="SEND">
+                                    INITIALIZE TRANSMISSION
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="border-t border-white/5 pt-20 pb-10 relative z-10 bg-brand-black overflow-hidden">
+                <!-- Footer Grid Background -->
+                <div class="absolute inset-0 z-0"
+                    style="background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 50px 50px; transform: perspective(500px) rotateX(60deg) scale(2); transform-origin: top; opacity: 0.3;">
+                </div>
+
+                <div class="container mx-auto px-6 lg:px-12 relative z-10">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
+                        <a href="#" class="text-3xl font-tech font-bold tracking-tighter flex items-center gap-2">
+                            <i class="fas fa-layer-group text-brand-purple"></i>
+                            <span>SSn <span class="text-brand-purple">Go</span></span>
+                        </a>
+
+                        <div class="flex gap-4">
+                            <a href="https://github.com/ShreyasNalawade" target="_blank" 
+                                class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-brand-purple hover:border-brand-purple transition-all magnetic"><i
+                                    class="fab fa-github"></i></a>
+                            <a href="https://www.linkedin.com/in/shreyas-s-nalawade-234340283?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" 
+                                class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-[#0077b5] hover:border-[#0077b5] transition-all magnetic"><i
+                                    class="fab fa-linkedin-in"></i></a>
+                            <a href="#"
+                                class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-[#1DA1F2] hover:border-[#1DA1F2] transition-all magnetic"><i
+                                    class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+
+                    <div
+                        class="flex flex-col md:flex-row justify-between items-center border-t border-white/10 pt-8 text-xs text-gray-500 font-tech tracking-widest uppercase">
+                        <p>&copy; 2026 SSn Go. ALL RIGHTS RESERVED.</p>
+                        <p class="mt-4 md:mt-0 flex items-center gap-2">STATUS: <span
+                                class="w-2 h-2 rounded-full bg-green-500 inline-block animate-pulse"></span> ONLINE &
+                            ACCEPTING PROJECTS</p>
+                    </div>
+                </div>
+            </footer>
+
+        </div>
+    </main>
+
+    <!-- Project Detail Modal -->
+    <div id="project-modal"
+        class="fixed inset-0 bg-black/85 backdrop-blur-md z-[100] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+        <div class="glass-panel max-w-2xl w-full rounded-3xl overflow-hidden relative border border-white/10 p-8 transform scale-95 transition-all duration-300 flex flex-col gap-6"
+            id="modal-container">
+            <!-- Close Button -->
+            <button id="close-modal"
+                class="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors cursor-pointer text-xl w-8 h-8 flex items-center justify-center rounded-full bg-white/5 border border-white/10 hover:bg-white/10 magnetic"
+                data-cursor="CLOSE">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <!-- Modal Header -->
+            <div class="flex items-center gap-5">
+                <div class="w-16 h-16 rounded-full bg-brand-purple/10 border border-brand-purple/30 flex items-center justify-center text-brand-purple text-3xl shadow-[0_0_20px_rgba(139,92,246,0.2)]"
+                    id="modal-icon-container">
+                    <i class="fas fa-project-diagram" id="modal-icon"></i>
+                </div>
+                <div>
+                    <span class="text-[10px] font-tech text-brand-purple tracking-widest uppercase mb-1 block"
+                        id="modal-tag">01 // HEALTHCARE</span>
+                    <h3 class="text-2xl md:text-3xl font-black font-display tracking-tight text-white leading-none"
+                        id="modal-title">Project Name</h3>
+                </div>
+            </div>
+
+            <!-- Separator Line -->
+            <div class="h-[1px] bg-white/10 w-full"></div>
+
+            <!-- Modal Body -->
+            <div class="max-h-[45vh] overflow-y-auto pr-2 space-y-6 font-light text-gray-300 text-sm leading-relaxed scrollbar-thin"
+                id="modal-body-content">
+                <!-- Content will be injected dynamically -->
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="flex flex-col sm:flex-row gap-4 items-center justify-between mt-2 pt-4 border-t border-white/5">
+                <div class="flex gap-2" id="modal-badges">
+                    <!-- Badges injected dynamically -->
+                </div>
+                <a href="#" target="_blank" id="modal-link"
+                    class="group relative px-6 py-3 bg-brand-purple rounded-full text-white font-bold tracking-wider text-[10px] uppercase overflow-hidden w-full sm:w-auto text-center magnetic"
+                    data-cursor="VISIT">
+                    <span class="relative z-10 flex items-center justify-center gap-2">
+                        VISIT DEMO PLATFORM <i class="fas fa-external-link-alt text-[10px]"></i>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- jQuery (Requested by prompt) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Lenis -->
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+    <!-- Vanilla Tilt -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // Register GSAP ScrollTrigger
+        gsap.registerPlugin(ScrollTrigger);
+
+        document.addEventListener("DOMContentLoaded", () => {
+
+            // --- 1. LENIS SMOOTH SCROLL ---
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                direction: 'vertical',
+                gestureDirection: 'vertical',
+                smooth: true,
+                mouseMultiplier: 1,
+                smoothTouch: false,
+                touchMultiplier: 2,
+                infinite: false,
+            });
+
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+            requestAnimationFrame(raf);
+
+            // Connect GSAP ScrollTrigger with Lenis
+            lenis.on('scroll', ScrollTrigger.update);
+            gsap.ticker.add((time) => { lenis.raf(time * 1000) });
+            gsap.ticker.lagSmoothing(0, 0);
+
+
+            // --- 2. PRELOADER ANIMATION ---
+            const preloader = document.getElementById('preloader');
+            const loaderText = document.getElementById('loader-text');
+            const loaderBar = document.getElementById('loader-bar');
+
+            let progress = 0;
+            const updateProgress = setInterval(() => {
+                progress += Math.floor(Math.random() * 10) + 1;
+                if (progress > 100) progress = 100;
+
+                loaderText.innerText = progress < 10 ? '0' + progress : progress;
+                loaderBar.style.width = progress + '%';
+
+                if (progress === 100) {
+                    clearInterval(updateProgress);
+
+                    // Exit Animation
+                    const tl = gsap.timeline();
+                    tl.to(loaderText, { opacity: 0, y: -20, duration: 0.5 })
+                        .to(loaderBar.parentElement, { scaleX: 0, transformOrigin: 'right', duration: 0.5 }, "-=0.3")
+                        .to(preloader, { yPercent: -100, duration: 1, ease: "power4.inOut" })
+                        .call(initAnimations) // Start main animations
+                        .set(preloader, { display: "none" });
+                }
+            }, 50);
+
+
+            // --- 3. CUSTOM CURSOR & DYNAMIC LIGHTING ---
+            const cursorDot = document.getElementById('cursor-dot');
+            const cursorOutline = document.getElementById('cursor-outline');
+            const cursorText = document.getElementById('cursor-text');
+            const mouseLight = document.getElementById('mouse-light');
+
+            let mouseX = 0;
+            let mouseY = 0;
+            let outlineX = 0;
+            let outlineY = 0;
+
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+
+                // Instant dot
+                cursorDot.style.left = mouseX + 'px';
+                cursorDot.style.top = mouseY + 'px';
+
+                // Dynamic Lighting on background
+                mouseLight.style.left = mouseX + 'px';
+                mouseLight.style.top = mouseY + 'px';
+            });
+
+            // Trailing outline
+            const renderCursor = () => {
+                outlineX += (mouseX - outlineX) * 0.15;
+                outlineY += (mouseY - outlineY) * 0.15;
+                cursorOutline.style.left = outlineX + 'px';
+                cursorOutline.style.top = outlineY + 'px';
+                requestAnimationFrame(renderCursor);
+            }
+            renderCursor();
+
+            // Magnetic Buttons & Hover Effects
+            const magnetics = document.querySelectorAll('.magnetic');
+            magnetics.forEach(btn => {
+                btn.addEventListener('mousemove', (e) => {
+                    const rect = btn.getBoundingClientRect();
+                    const h = rect.width / 2;
+                    const v = rect.height / 2;
+                    const x = e.clientX - rect.left - h;
+                    const y = e.clientY - rect.top - v;
+
+                    gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 0.4, ease: "power2.out" });
+                });
+
+                btn.addEventListener('mouseenter', () => {
+                    cursorOutline.classList.add('hover');
+                    if (btn.dataset.cursor) {
+                        cursorText.innerText = btn.dataset.cursor;
+                        cursorDot.style.opacity = '0';
+                    }
+                });
+
+                btn.addEventListener('mouseleave', () => {
+                    gsap.to(btn, { x: 0, y: 0, duration: 0.4, ease: "elastic.out(1, 0.3)" });
+                    cursorOutline.classList.remove('hover');
+                    cursorText.innerText = '';
+                    cursorDot.style.opacity = '1';
+                });
+            });
+
+
+            // --- 3b. MOBILE NAVIGATION MENU ---
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (mobileMenuBtn && mobileMenu) {
+                const menuIcon = mobileMenuBtn.querySelector('i');
+
+                const closeMenu = () => {
+                    mobileMenu.classList.remove('open');
+                    mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                    if (menuIcon) menuIcon.className = 'fas fa-bars';
+                };
+
+                mobileMenuBtn.addEventListener('click', () => {
+                    const isOpen = mobileMenu.classList.toggle('open');
+                    mobileMenuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                    if (menuIcon) menuIcon.className = isOpen ? 'fas fa-times' : 'fas fa-bars';
+                });
+
+                // Smooth scroll + auto-close when a mobile link is tapped
+                mobileMenu.querySelectorAll('a[href^="#"]').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        const targetId = link.getAttribute('href');
+                        const target = document.querySelector(targetId);
+                        if (target) {
+                            e.preventDefault();
+                            closeMenu();
+                            lenis.scrollTo(target, { offset: -70 });
+                        } else {
+                            closeMenu();
+                        }
+                    });
+                });
+            }
+
+            // Smooth scroll for desktop nav anchor links
+            document.querySelectorAll('nav .hidden a[href^="#"], a[href="#contact"], a[href="#work"]').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    const targetId = link.getAttribute('href');
+                    if (!targetId || targetId === '#') return;
+                    const target = document.querySelector(targetId);
+                    if (target) {
+                        e.preventDefault();
+                        lenis.scrollTo(target, { offset: -70 });
+                    }
+                });
+            });
+
+
+            // --- 4. THREE.JS ABSTRACT CINEMATIC BACKGROUND ---
+            function initThreeJS() {
+                const canvas = document.getElementById('bg-canvas');
+                const scene = new THREE.Scene();
+                // Add slight fog for depth
+                scene.fog = new THREE.FogExp2(0x050505, 0.0015);
+
+                const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // optimize
+
+                // Particles (Stars/Data nodes)
+                const geometry = new THREE.BufferGeometry();
+                const particlesCount = 1500;
+                const posArray = new Float32Array(particlesCount * 3);
+
+                for (let i = 0; i < particlesCount * 3; i++) {
+                    posArray[i] = (Math.random() - 0.5) * 20; // Spread
+                }
+
+                geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+                // Texture for particles (make them look like glowing dots)
+                const material = new THREE.PointsMaterial({
+                    size: 0.02,
+                    color: 0x8b5cf6, // Brand purple
+                    transparent: true,
+                    opacity: 0.6,
+                    blending: THREE.AdditiveBlending
+                });
+
+                const particlesMesh = new THREE.Points(geometry, material);
+                scene.add(particlesMesh);
+
+                // Add an abstract wireframe icosahedron
+                const icoGeometry = new THREE.IcosahedronGeometry(3, 1);
+                const icoMaterial = new THREE.MeshBasicMaterial({
+                    color: 0x06b6d4, // Cyan
+                    wireframe: true,
+                    transparent: true,
+                    opacity: 0.05
+                });
+                const icoMesh = new THREE.Mesh(icoGeometry, icoMaterial);
+                icoMesh.position.z = -5;
+                scene.add(icoMesh);
+
+                camera.position.z = 5;
+
+                // Mouse interactivity for Three.js
+                let targetX = 0;
+                let targetY = 0;
+
+                document.addEventListener('mousemove', (event) => {
+                    targetX = (event.clientX / window.innerWidth) - 0.5;
+                    targetY = (event.clientY / window.innerHeight) - 0.5;
+                });
+
+                const clock = new THREE.Clock();
+
+                function animateThree() {
+                    requestAnimationFrame(animateThree);
+                    const elapsedTime = clock.getElapsedTime();
+
+                    // Slow rotation
+                    particlesMesh.rotation.y += 0.0005;
+                    icoMesh.rotation.x += 0.001;
+                    icoMesh.rotation.y += 0.001;
+
+                    // Floating effect
+                    icoMesh.position.y = Math.sin(elapsedTime * 0.5) * 0.2;
+
+                    // Mouse parallax
+                    particlesMesh.rotation.x += (targetY * 0.5 - particlesMesh.rotation.x) * 0.05;
+                    particlesMesh.rotation.y += (targetX * 0.5 - particlesMesh.rotation.y) * 0.05;
+
+                    renderer.render(scene, camera);
+                }
+                animateThree();
+
+                window.addEventListener('resize', () => {
+                    camera.aspect = window.innerWidth / window.innerHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+            }
+
+
+            // --- 5. GSAP SCROLL & REVEAL ANIMATIONS ---
+            function initAnimations() {
+                // Initialize Three JS Background when preloader finishes
+                initThreeJS();
+
+                // Make hidden elements visible for GSAP
+                gsap.set(".gsap-reveal", { visibility: "visible" });
+
+                // Hero Text Split & Stagger effect (Simulated SplitText)
+                const heroTexts = document.querySelectorAll('.hero-stagger');
+                gsap.from(heroTexts, {
+                    y: 100,
+                    opacity: 0,
+                    duration: 1.2,
+                    stagger: 0.15,
+                    ease: "power4.out"
+                });
+
+                // Floating UI Elements in Hero
+                gsap.to(".float-anim", {
+                    y: -20,
+                    rotation: -8,
+                    duration: 3,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "sine.inOut"
+                });
+                gsap.to(".float-anim-delayed", {
+                    y: 20,
+                    rotation: 5,
+                    duration: 4,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "sine.inOut",
+                    delay: 1
+                });
+
+                // Navbar blur on scroll
+                ScrollTrigger.create({
+                    trigger: "body",
+                    start: "top -50",
+                    end: "bottom bottom",
+                    onUpdate: (self) => {
+                        const nav = document.getElementById('navbar');
+                        if (self.direction === 1) { // Scrolling down
+                            nav.style.transform = "translateY(-100%)";
+                        } else {
+                            nav.style.transform = "translateY(0)";
+                            nav.classList.add('glass-panel', 'border-b', 'border-white/10');
+                        }
+                        if (window.scrollY < 50) {
+                            nav.classList.remove('glass-panel', 'border-b', 'border-white/10');
+                        }
+                    }
+                });
+
+                // General Section Reveals
+                const revealElements = document.querySelectorAll('.gsap-reveal:not(.hero-stagger, .service-card, .timeline-item)');
+                revealElements.forEach(el => {
+                    gsap.from(el, {
+                        scrollTrigger: {
+                            trigger: el,
+                            start: "top 85%",
+                            toggleActions: "play none none reverse"
+                        },
+                        y: 50,
+                        opacity: 0,
+                        duration: 1,
+                        ease: "power3.out"
+                    });
+                });
+
+                // Stats Stagger
+                gsap.from(".stat-item", {
+                    scrollTrigger: {
+                        trigger: ".stat-item",
+                        start: "top 90%",
+                    },
+                    y: 30, opacity: 0, stagger: 0.1, duration: 0.8, ease: "back.out(1.7)"
+                });
+
+                // Services Cards Stagger
+                gsap.from(".service-card", {
+                    scrollTrigger: {
+                        trigger: "#services",
+                        start: "top 70%",
+                    },
+                    y: 50, opacity: 0, stagger: 0.15, duration: 0.8, ease: "power2.out"
+                });
+
+                // Projects Horizontal Scroll (works on every screen size)
+                const projectsContainer = document.getElementById("projects-container");
+                const projectCards = gsap.utils.toArray(".project-card");
+
+                if (projectsContainer && projectCards.length) {
+                    // Distance the track must travel to reveal the last card
+                    const getScrollAmount = () =>
+                        Math.max(0, projectsContainer.scrollWidth - window.innerWidth);
+
+                    gsap.to(projectsContainer, {
+                        x: () => -getScrollAmount(),
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: "#projects-wrapper",
+                            start: "top top",
+                            pin: true,
+                            scrub: 1,
+                            anticipatePin: 1,
+                            invalidateOnRefresh: true,
+                            end: () => "+=" + getScrollAmount()
+                        }
+                    });
+
+                    // Recalculate on orientation change / resize so it stays accurate
+                    window.addEventListener("resize", () => ScrollTrigger.refresh());
+                }
+
+                // Process Timeline Fill Line
+                gsap.to("#timeline-progress", {
+                    scrollTrigger: {
+                        trigger: "#process",
+                        start: "top center",
+                        end: "bottom center",
+                        scrub: 0.5
+                    },
+                    height: "100%",
+                    ease: "none"
+                });
+
+                // Timeline Dots Activation
+                const timelineItems = document.querySelectorAll(".timeline-item");
+                timelineItems.forEach(item => {
+                    const dot = item.querySelector(".timeline-dot");
+                    gsap.to(dot, {
+                        scrollTrigger: {
+                            trigger: item,
+                            start: "top center",
+                            toggleClass: { targets: dot, className: "bg-brand-purple border-brand-cyan shadow-[0_0_20px_#8b5cf6]" }
+                        }
+                    });
+
+                    // Reveal text
+                    gsap.from(item.querySelectorAll("div:not(.timeline-dot)"), {
+                        scrollTrigger: {
+                            trigger: item,
+                            start: "top 80%"
+                        },
+                        y: 30, opacity: 0, duration: 0.8, ease: "power2.out"
+                    });
+                });
+            }
+
+            // --- 6. PROJECTS DETAIL MODAL ---
+            const projectData = [
+                {
+                    tag: "01 // HEALTHCARE",
+                    title: "Dental Clinic Management",
+                    iconClass: "fas fa-clinic-medical",
+                    colorClass: "text-brand-purple border-brand-purple/30 bg-brand-purple/10 shadow-[0_0_20px_rgba(139,92,246,0.2)]",
+                    badges: ["Laravel 12", "MySQL", "Tailwind"],
+                    link: "https://cp.painsolution.in/",
+                    html: `
+                        <div class="space-y-4">
+                            <p class="text-gray-400">An enterprise-grade clinic management system designed to streamline patient operations, digital records, and clinic administrative workflows.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                                <div class="glass-panel p-4 rounded-xl border border-white/5">
+                                    <h5 class="text-white font-bold mb-2 flex items-center gap-2 text-xs font-tech text-brand-purple"><i class="fas fa-user-injured"></i> PATIENT DATABASE</h5>
+                                    <p class="text-[12px] text-gray-400">Maintains complete dental histories, dental treatment plans, digital medical scripts, and invoicing logs securely.</p>
+                                </div>
+                                <div class="glass-panel p-4 rounded-xl border border-white/5">
+                                    <h5 class="text-white font-bold mb-2 flex items-center gap-2 text-xs font-tech text-brand-purple"><i class="fas fa-calendar-check"></i> SMART REMINDERS</h5>
+                                    <p class="text-[12px] text-gray-400">Integrated calendar booking engine that dispatches automated email/SMS appointment alerts to reduce clinic no-show rates.</p>
+                                </div>
+                            </div>
+                            <div class="pt-2">
+                                <h5 class="text-white font-bold mb-2 text-xs font-tech">SYSTEM ARCHITECTURE</h5>
+                                <p class="text-[12px] text-gray-400">Fully structured on MVC architecture using <strong>Laravel 12</strong> on PHP 8.2+. Queries are optimized via indices on <strong>MySQL</strong> to support instantaneous patient search results.</p>
+                            </div>
+                        </div>
+                    `
+                },
+                {
+                    tag: "02 // ADVERTISING & BROADCASTING",
+                    title: "IP-TV Control Engine",
+                    iconClass: "fas fa-tv",
+                    colorClass: "text-brand-cyan border-brand-cyan/30 bg-brand-cyan/10 shadow-[0_0_20px_rgba(6,182,212,0.2)]",
+                    badges: ["Laravel 12", "MySQL", "Android SDK", "WebSockets"],
+                    link: "https://cp.ip-tv.in/",
+                    html: `
+                        <div class="space-y-4">
+                            <p class="text-gray-400">A high-performance digital signage dashboard built to command and broadcast advertising playlists to thousands of screens worldwide in real-time.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                                <div class="glass-panel p-4 rounded-xl border border-white/5">
+                                    <h5 class="text-white font-bold mb-2 flex items-center gap-2 text-xs font-tech text-brand-cyan"><i class="fas fa-qrcode"></i> 6-DIGIT PAIRING</h5>
+                                    <p class="text-[12px] text-gray-400">TV downloads the client app, displays a pairing pin, and CRM links the screen upon verification using WebSockets.</p>
+                                </div>
+                                <div class="glass-panel p-4 rounded-xl border border-white/5">
+                                    <h5 class="text-white font-bold mb-2 flex items-center gap-2 text-xs font-tech text-brand-cyan"><i class="fas fa-bolt"></i> INSTANT BROADCAST</h5>
+                                    <p class="text-[12px] text-gray-400">Allows marketing managers to publish video campaigns to lakhs of devices globally within seconds with a single click.</p>
+                                </div>
+                            </div>
+                            <div class="pt-2">
+                                <h5 class="text-white font-bold mb-2 text-xs font-tech">SYSTEM ARCHITECTURE</h5>
+                                <p class="text-[12px] text-gray-400">Designed with a <strong>Laravel 12</strong> API controlling screen configuration state. Live connections are managed with WebSocket push streams to minimize network overhead and guarantee rapid video delivery.</p>
+                            </div>
+                        </div>
+                    `
+                },
+                {
+                    tag: "03 // INVENTORY & FINANCE",
+                    title: "Smart Inventory Manager",
+                    iconClass: "fas fa-boxes",
+                    colorClass: "text-brand-cyan border-brand-cyan/30 bg-brand-cyan/10 shadow-[0_0_20px_rgba(6,182,212,0.2)]",
+                    badges: ["Laravel 12", "MySQL", "Vashi Market CRM", "Interest Engine"],
+                    link: "https://sandipoildepo.ssngo.shop/login",
+                    html: `
+                        <div class="space-y-4">
+                            <p class="text-gray-400">A custom-built, ultra-simple CRM designed for customers to seamlessly manage their inventory and Vashi Market bills. It tracks daily incoming stock, records transaction states (Paid vs. Unpaid), auto-calculates credit interest, and monitors daily income on a single, easy-to-use ledger dashboard.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                                <div class="glass-panel p-4 rounded-xl border border-white/5">
+                                    <h5 class="text-white font-bold mb-2 flex items-center gap-2 text-xs font-tech text-brand-cyan"><i class="fas fa-warehouse"></i> DAILY VASHI INTAKE</h5>
+                                    <p class="text-[12px] text-gray-400">Logs daily inventory arrivals coming directly from the Vashi Market, cataloging products, quantities, and supplier origins with single-click inputs.</p>
+                                </div>
+                                <div class="glass-panel p-4 rounded-xl border border-white/5">
+                                    <h5 class="text-white font-bold mb-2 flex items-center gap-2 text-xs font-tech text-brand-cyan"><i class="fas fa-file-invoice-dollar"></i> BILL & INTEREST LEDGER</h5>
+                                    <p class="text-[12px] text-gray-400">Tracks transaction records, separates paid and unpaid bills, and automatically runs customizable interest calculations on pending credits.</p>
+                                </div>
+                            </div>
+                            <div class="pt-2">
+                                <h5 class="text-white font-bold mb-2 text-xs font-tech">SYSTEM ARCHITECTURE</h5>
+                                <p class="text-[12px] text-gray-400">Engineered with a lightweight <strong>Laravel 12</strong> core and a fast <strong>MySQL</strong> backend. Focuses on minimal database query overhead to deliver a fast, simple, and intuitive daily income tracking experience.</p>
+                            </div>
+                        </div>
+                    `
+                },
+                {
+                    tag: "04 // MARKETING AUTOMATION",
+                    title: "Bulk WhatsApp Engine",
+                    iconClass: "fab fa-whatsapp",
+                    colorClass: "text-green-500 border-green-500/30 bg-green-500/10 shadow-[0_0_20px_rgba(34,197,94,0.2)]",
+                    badges: ["Laravel 12", "MySQL", "WhatsApp Cloud", "SMTP/Email API", "Redis Queues"],
+                    link: "https://society.insignsms.com/login",
+                    html: `
+                        <div class="space-y-4">
+                            <p class="text-gray-400">A high-capacity, multichannel marketing engine designed to dispatch personalized WhatsApp messages and emails with attachments simultaneously, integrated with chatbot sequence triggers. Engineered for rapid delivery, it can send lakhs of messages per minute across both channels and download comprehensive delivery reports down to each individual contact number.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                                <div class="glass-panel p-4 rounded-xl border border-white/5">
+                                    <h5 class="text-white font-bold mb-2 flex items-center gap-2 text-xs font-tech text-green-500"><i class="fas fa-mail-bulk"></i> MULTICHANNEL ENGINE</h5>
+                                    <p class="text-[12px] text-gray-400">Sends highly personalized WhatsApp campaigns and emails with attachments simultaneously, alongside automated chatbot workflows to handle client responses.</p>
+                                </div>
+                                <div class="glass-panel p-4 rounded-xl border border-white/5">
+                                    <h5 class="text-white font-bold mb-2 flex items-center gap-2 text-xs font-tech text-green-500"><i class="fas fa-bolt"></i> LAKHS OF MSG / MIN</h5>
+                                    <p class="text-[12px] text-gray-400">Features multi-threaded parallel dispatching queue pipelines to scale throughput, delivering lakhs of messages per minute across email and WhatsApp API paths.</p>
+                                </div>
+                                <div class="glass-panel p-4 rounded-xl border border-white/5 md:col-span-2">
+                                    <h5 class="text-white font-bold mb-2 flex items-center gap-2 text-xs font-tech text-green-500"><i class="fas fa-file-download"></i> CONTACT-LEVEL REPORTS</h5>
+                                    <p class="text-[12px] text-gray-400">Tracks instant transmission logs, read/receipt states, and enables direct CSV/Excel downloads of detailed reports for each contact number.</p>
+                                </div>
+                            </div>
+                            <div class="pt-2">
+                                <h5 class="text-white font-bold mb-2 text-xs font-tech">SYSTEM ARCHITECTURE</h5>
+                                <p class="text-[12px] text-gray-400">Powered by <strong>Laravel 12</strong> and <strong>Redis</strong> multi-threaded dispatch queues to orchestrate simultaneous WhatsApp and Email campaigns. Log status changes are written instantly into <strong>MySQL</strong> databases, ensuring fast per-contact report compilation.</p>
+                            </div>
+                        </div>
+                    `
+                }
+            ];
+
+            const modal = document.getElementById("project-modal");
+            const modalContainer = document.getElementById("modal-container");
+            const closeModalBtn = document.getElementById("close-modal");
+            const modalIcon = document.getElementById("modal-icon");
+            const modalIconContainer = document.getElementById("modal-icon-container");
+            const modalTag = document.getElementById("modal-tag");
+            const modalTitle = document.getElementById("modal-title");
+            const modalBody = document.getElementById("modal-body-content");
+            const modalBadges = document.getElementById("modal-badges");
+            const modalLink = document.getElementById("modal-link");
+
+            document.querySelectorAll(".project-card").forEach((card, index) => {
+                card.addEventListener("click", () => {
+                    const data = projectData[index];
+                    if (!data) return;
+
+                    // Set modal elements
+                    modalTag.innerText = data.tag;
+                    modalTitle.innerText = data.title;
+                    modalIcon.className = data.iconClass;
+                    modalIconContainer.className = `w-16 h-16 rounded-full border flex items-center justify-center text-3xl ${data.colorClass}`;
+                    modalBody.innerHTML = data.html;
+                    modalLink.href = data.link;
+
+                    // Clear and set badges
+                    modalBadges.innerHTML = "";
+                    data.badges.forEach(badge => {
+                        const span = document.createElement("span");
+                        span.className = "px-3 py-1 rounded bg-white/5 text-[10px] font-tech text-white";
+                        span.innerText = badge;
+                        modalBadges.appendChild(span);
+                    });
+
+                    // Open animation
+                    modal.classList.remove("opacity-0", "pointer-events-none");
+                    modalContainer.classList.remove("scale-95");
+                    modalContainer.classList.add("scale-100");
+                });
+            });
+
+            const closeModal = () => {
+                modal.classList.add("opacity-0", "pointer-events-none");
+                modalContainer.classList.remove("scale-100");
+                modalContainer.classList.add("scale-95");
+            };
+
+            closeModalBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                closeModal();
+            });
+
+            modal.addEventListener("click", (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            // --- 7. CONTACT FORM SUBMIT (POST to API + SweetAlert) ---
+            const contactForm = document.getElementById("contact-form");
+            if (contactForm) {
+                const CONTACT_API = "https://cp.painsolution.in/api/shreya-data";
+                const submitBtn = document.getElementById("contact-submit");
+                const submitBtnDefault = submitBtn ? submitBtn.innerHTML : "";
+
+                contactForm.addEventListener("submit", async (e) => {
+                    e.preventDefault();
+
+                    const name = document.getElementById("name").value.trim();
+                    const email = document.getElementById("email").value.trim();
+                    const phone = document.getElementById("phone").value.trim();
+                    const systemType = document.getElementById("system-type").value;
+                    const message = document.getElementById("message").value.trim();
+
+                    // Basic required-field check (phone is optional)
+                    if (!name || !email || !message) {
+                        if (window.Swal) {
+                            Swal.fire({
+                                icon: "warning",
+                                title: "Missing Details",
+                                text: "Please fill in your name, email and project requirements.",
+                                background: "#0f0f0f",
+                                color: "#ffffff",
+                                confirmButtonColor: "#8b5cf6",
+                                confirmButtonText: "Got it"
+                            });
+                        }
+                        return;
+                    }
+
+                    const payload = {
+                        name: name,
+                        email: email,
+                        phone: phone,
+                        system_type: systemType,
+                        message: message
+                    };
+
+                    // Loading state
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> SENDING...';
+                    }
+
+                    try {
+                        const response = await fetch(CONTACT_API, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Accept": "application/json"
+                            },
+                            body: JSON.stringify(payload)
+                        });
+
+                        const responseText = await response.text();
+                        let responseData = null;
+
+                        try {
+                            responseData = responseText ? JSON.parse(responseText) : null;
+                        } catch (parseError) {
+                            responseData = { message: responseText };
+                        }
+
+                        if (!response.ok) {
+                            const apiMessage = responseData?.message || responseData?.error || "Server responded with status " + response.status;
+                            throw new Error(apiMessage);
+                        }
+
+                        if (window.Swal) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Transmission Received!",
+                                html: `Thank you, <strong>${name}</strong>.<br>We will reach you soon.`,
+                                background: "#0f0f0f",
+                                color: "#ffffff",
+                                iconColor: "#8b5cf6",
+                                confirmButtonColor: "#8b5cf6",
+                                confirmButtonText: "Awesome",
+                                timer: 6000,
+                                timerProgressBar: true
+                            });
+                        }
+
+                        contactForm.reset();
+                    } catch (err) {
+                        if (window.Swal) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Transmission Failed",
+                                text: err.message || "Something went wrong while sending your message. Please try again or email us directly.",
+                                background: "#0f0f0f",
+                                color: "#ffffff",
+                                confirmButtonColor: "#8b5cf6",
+                                confirmButtonText: "Retry"
+                            });
+                        }
+                    } finally {
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = submitBtnDefault;
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
